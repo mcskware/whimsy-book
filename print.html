@@ -1,0 +1,2129 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>A Whimsical Tour of Intermediate Rust Programming</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="./mdbook-admonish.css">
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">A Whimsical Tour of Intermediate Rust Programming</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<p>Welcome to A Whimsical Tour of Intermediate Rust Programming!</p>
+<p>In this book, we're going to build a fun, useless, but rewarding project to better understand Rust, beyond the usual toy projects you'll find in many learning resources.</p>
+<p>We're going to build a procedural terrain generator and viewer!</p>
+<p><img src="./assets/intro_landscape_screenshot.png" alt="An example procedurally generated landscape" /></p>
+<p>This book walks Rust programmers through several areas which might still be a bit murky after finishing <a href="https://doc.rust-lang.org/stable/book/">The Book</a> and possibly the <a href="https://github.com/rust-lang/rustlings">Rustlings</a> exercises.
+We'll cover a variety of topics that I have personally found challenging to grasp, without scouring the web for the odd and sometimes obscure tips and tricks.</p>
+<p>You don't need to be a Rust master to enjoy and learn from this tour.
+In fact, I'll only be assuming that you've either read <a href="https://doc.rust-lang.org/stable/book/">The Book</a> or a similar guide (like <a href="https://www.oreilly.com/library/view/programming-rust/9781491927274/">Programming Rust</a>), but perhaps you haven't had a chance to use all the things you've read about yet.</p>
+<h2 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h2>
+<p>See the <a href="./chapter_0.html">Chapter 0</a> page for a full list, but if you're comfortable writing small Rust programs, you're probably good to go.</p>
+<h2 id="a-note-about-cuda"><a class="header" href="#a-note-about-cuda">A note about CUDA</a></h2>
+<p>This project covers <a href="https://en.wikipedia.org/wiki/General-purpose_computing_on_graphics_processing_units">GPGPU</a> programming, via the <a href="https://developer.nvidia.com/cuda-downloads">CUDA</a> library.
+There are other options for GPGPU programming, such as writing kernels via <a href="https://wgpu.rs/">wgpu</a> and the custom WebGPU shader language <a href="https://www.w3.org/TR/WGSL/">wgsl</a>, but I prefer to code the kernels in Rust.</p>
+<p>We will be writing the generator for CPU first, so you'll still be able to enjoy the book even if you don't have a CUDA device.</p>
+<p>If you don't have access to an nVidia device that supports CUDA, you are free to browse Chapters 4 and 5 without actually running the code.
+There are a few CUDA emulators out there, but since I haven't tried them, I'm not going to recommend anything here.
+So proceed with caution if you go this route, but it's definitely an option.</p>
+<h2 id="what-well-cover-on-the-tour"><a class="header" href="#what-well-cover-on-the-tour">What we'll cover on the tour</a></h2>
+<p>We're going to be building up a fun little graphics application from the ground up in this tour. Along the way, we'll cover things like:</p>
+<p><a href="./chapter_1/chapter_1_0.html">Chapter 1: Best Practices and Project Setup</a></p>
+<ul>
+<li>Setting up a project as a <a href="https://doc.rust-lang.org/cargo/reference/workspaces.html">virtual workspace</a>
+<ul>
+<li>Understanding what belongs in the root <code>Cargo.toml</code></li>
+<li>Understanding what belongs in the subproject <code>Cargo.toml</code> files, as well as how to inherit from the root</li>
+<li>Best practices for dependency specifications</li>
+<li>Understanding <code>Cargo.lock</code></li>
+</ul>
+</li>
+<li>Improving your life with Clippy
+<ul>
+<li>Understanding what <a href="https://rust-lang.github.io/rust-clippy/stable/index.html">lints</a> are available, and which are <a href="https://rust-lang.github.io/rust-clippy/stable/index.html#?levels=deny,warn">enabled by default</a></li>
+<li><a href="https://doc.rust-lang.org/stable/clippy/configuration.html">Adding a set of lints</a> you'd see as "best-practice" extras, beyond what's included by the default clippy linting</li>
+</ul>
+</li>
+</ul>
+<p><a href="./chapter_2.html">Chapter 2: Winit, innit?</a></p>
+<ul>
+<li>Creating a graphical application window with <a href="https://github.com/rust-windowing/winit">winit</a>
+<ul>
+<li>Using <code>winit</code> to create a basic window and event handler</li>
+<li>Using <a href="https://github.com/rust-windowing/softbuffer">softbuffer</a> to get a usable handle to the graphics buffer</li>
+<li>Using <a href="https://github.com/emilk/egui">egui</a> to display basic UI for debugging info</li>
+</ul>
+</li>
+<li>Generating satisfying procedurally-generated landscapes using <a href="https://github.com/KdotJPG/OpenSimplex2/tree/master">OpenSimplex</a> noise
+<ul>
+<li>Understanding how OpenSimplex works</li>
+<li>Writing a CPU kernel for noise generation</li>
+</ul>
+</li>
+</ul>
+<p><a href="./chapter_3.html">Chapter 3: Passing the test</a></p>
+<ul>
+<li>Using and understanding all of Rust's default testing options
+<ul>
+<li>inline <a href="https://doc.rust-lang.org/reference/attributes/testing.html#the-test-attribute">unit tests</a></li>
+<li><a href="https://doc.rust-lang.org/rustdoc/write-documentation/documentation-tests.html">doc tests</a></li>
+<li><a href="https://doc.rust-lang.org/cargo/reference/cargo-targets.html?highlight=examples#integration-tests">integration</a> tests</li>
+<li>using the <a href="https://doc.rust-lang.org/cargo/reference/cargo-targets.html?highlight=examples#examples">examples</a> functionality</li>
+<li>micro-benchmarking with both <a href="https://doc.rust-lang.org/cargo/reference/cargo-targets.html?highlight=examples#benchmarks">the default cargo functionality</a>, as well as with the <a href="https://github.com/bheisler/criterion.rs">criterion</a> crate</li>
+</ul>
+</li>
+</ul>
+<p><a href="./chapter_4.html">Chapter 4: An army of Caterpillars</a></p>
+<ul>
+<li>Writing GPGPU code with CUDA
+<ul>
+<li><a href="https://doc.rust-lang.org/nomicon/ffi.html">FFI</a> to talk to the CUDA libraries from Rust
+<ul>
+<li>Conventions when creating a Rust interface for an external library</li>
+<li>Project setup for an FFI library</li>
+<li>How to manage the unsafe parts of FFI, and abstract them behind a safe interface</li>
+</ul>
+</li>
+<li>Creating our own Rust <a href="https://doc.rust-lang.org/book/ch10-02-traits.html">trait</a> to allow people to pass custom data types to kernels</li>
+<li>Use of the <a href="https://doc.rust-lang.org/rustc/platform-support/nvptx64-nvidia-cuda.html">nvptx64-nvidia-cuda toolchain</a> to create a <a href="https://docs.nvidia.com/cuda/parallel-thread-execution/index.html">ptx</a> file</li>
+<li>Understanding how to use Rust in a <a href="https://docs.rust-embedded.org/book/intro/no-std.html">no-std</a> environment</li>
+<li>Consuming the <code>ptx</code> file in a Rust binary</li>
+<li>Using CUDA library API calls to launch CUDA kernels from Rust</li>
+</ul>
+</li>
+<li>Implementing a more robust build system
+<ul>
+<li>Handling crates which target different toolchains or <a href="https://doc.rust-lang.org/rustc/targets/index.html">target-triples</a></li>
+<li>Using <a href="https://github.com/matklad/cargo-xtask">cargo-xtask</a> for more complex build requirements</li>
+</ul>
+</li>
+<li>Improving our runtime by moving noise generation to the GPU
+<ul>
+<li>Writing a CUDA kernel to generate noise values in a massively-parallel fashion</li>
+<li>Updating our main program to use the CUDA kernel</li>
+</ul>
+</li>
+</ul>
+<p><a href="./chapter_5.html">Chapter 5: Quality of Life improvements</a></p>
+<ul>
+<li>Building a <a href="https://doc.rust-lang.org/reference/procedural-macros.html">procedural macro</a> to auto-generate kernel thunks
+<ul>
+<li>Setting up a project for creating a procedural macro</li>
+<li>Using the <a href="https://github.com/dtolnay/syn">syn</a> and <a href="https://github.com/dtolnay/quote">quote</a> crates for quality of life improvements in proc macro code</li>
+<li>Using <a href="https://serde.rs/">serde</a> and <a href="https://github.com/serde-rs/json">serde_json</a> to create intermediate files to pass between builds involving different target-triples</li>
+</ul>
+</li>
+</ul>
+<p><a href="./chapter_6.html">Chapter 6: Profiles in Courage</a></p>
+<ul>
+<li>Profiling Rust and CUDA
+<ul>
+<li>Profiling Rust applications with <a href="https://docs.kde.org/stable5/en/kcachegrind/kcachegrind/index.html">KCachegrind</a></li>
+<li>Profiling CUDA kernels with <a href="https://docs.nvidia.com/cuda/profiler-users-guide/index.html">nvprof</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="lets-get-started"><a class="header" href="#lets-get-started">Let's get started</a></h2>
+<p>If you're ready to dive in, click the big arrow in the right side of this pane, and let's go!</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="chapter-1-best-practices-and-project-setup"><a class="header" href="#chapter-1-best-practices-and-project-setup">Chapter 1: Best Practices and Project Setup</a></h1>
+<p>Welcome!</p>
+<p>I'm glad you've decided to join me on this whimsical tour of intermediate Rust.
+Hopefully the idea of using procedural generation to create cute little landmasses sounds like fun to you.
+I always find that learning something that isn't supposed to be terribly useful is a great way to slow myself down, be a little more open to taking detours,
+and generally find that fun spark again that drew me to programming in the first place.</p>
+<p>If that sounds like something you've got the time and desire for,then let's go!</p>
+<p>But if we're going to be building a graphical window application to display random whimsical maps, using CUDA programming no less, then we're going to need a good understanding of Rust project setups!</p>
+<p>That's what this chapter is all about.</p>
+<p>We're going to cover the <a href="chapter_1/chapter_1_0.html#whats-a-package-whats-a-workspace">terminology</a> used when speaking about a Rust project, what a typical project <a href="chapter_1/chapter_1_0.html#understanding-whats-inside">contains</a>, and why <a href="chapter_1/chapter_1_0.html#cargo-vs-rust"><code>cargo</code> is so awesome</a>.</p>
+<p>If you're comfortable with these topics, feel free to skip to <a href="chapter_1/./chapter_1_1.html">Chapter 1.1</a> where we'll create a workspace, but do come back for a browse when and if you need to.</p>
+<h2 id="understanding-rust-project-setups"><a class="header" href="#understanding-rust-project-setups">Understanding Rust project setups</a></h2>
+<p>However, in case you're the more curious type...</p>
+<p>You're probably pretty familiar with creating a new Rust package.
+Generally, you either use <code>cargo new MyAmazingApp</code> or <code>cargo init</code>.
+These tools are amazing to get you up and running quickly.</p>
+<p>But there's a problem.</p>
+<h2 id="multiple-packages"><a class="header" href="#multiple-packages">Multiple packages</a></h2>
+<p>What do you do if you want to separate your code into multiple packages, but still access them all with the same <code>cargo</code> commands?
+Or more pressing still, what if you <em>must</em> use separate packages, like when you're targeting multiple different target platforms (as we'll be doing with procedural macros and CUDA code)?</p>
+<p>That's where workspaces come in.</p>
+<details id="admonition-compiling-for-multiple-targets" class="admonition admonish-info" role="note" aria-labelledby="admonition-compiling-for-multiple-targets-title">
+<summary class="admonition-title">
+<div id="admonition-compiling-for-multiple-targets-title">
+<p>Compiling for multiple targets</p>
+</div>
+<a class="admonition-anchor-link" href="chapter_1/chapter_1_0.html#admonition-compiling-for-multiple-targets"></a>
+</summary>
+<div>
+<p>When you compile a specific Rust crate, this is generally a single invocation of <code>rustc</code> (often via <code>cargo</code>), with a single set of options.
+This means there's no way to build a crate for two different targets simultaneously.
+If you want to build for different targets, you'll need to perform separate builds.</p>
+</div>
+</details>
+<h2 id="whats-a-package-whats-a-workspace"><a class="header" href="#whats-a-package-whats-a-workspace">What's a package? What's a workspace?</a></h2>
+<p>One key thing to remember is where the line is between Rust and <code>cargo</code>.
+When you're using <code>cargo</code> to create, build, test, and run your program, this distinction barely matters.
+But when you need to break things up, it's important to know how all this works.</p>
+<h3 id="getting-our-terminology-right"><a class="header" href="#getting-our-terminology-right">Getting our terminology right</a></h3>
+<p>Since things can get a bit tricky, I'll be using the following terms in the following ways.</p>
+<div class="table-wrapper"><table><thead><tr><th>Term</th><th>Definition</th><th>Example</th></tr></thead><tbody>
+<tr><td>module</td><td>A Rust "module", i.e. code inside of a <code>mod</code> block</td><td>A <code>Player</code> module in a video game, containing the data and logic describing a Player</td></tr>
+<tr><td>crate</td><td>What gets built when you tell <code>rustc</code> to compile a given <code>.rs</code> file. This includes all modules used by this <code>.rs</code> file. This builds either a library or an executable binary</td><td>A game model library, containing the <code>Player</code>, <code>Crop</code>, and <code>Harvest</code> modules</td></tr>
+<tr><td>package</td><td>The collection of all the relevant libraries and binaries. Also includes all the metadata included in <code>Cargo.toml</code>, as well as all dependency information</td><td>The game model library crate holding the game logic, compiled for a specific version of each dependency, with a specific version for users to track important changes in the package's development</td></tr>
+<tr><td>workspace</td><td>A collection of packages that need to be built in coordination, to ensure dependencies are kept in sync, API versions are used correctly, and metadata which should be shared can be described easily</td><td>Your game logic package, your game executable package, all the shared dependencies between them, and the necessary information on how to build the final product correctly</td></tr>
+<tr><td>project</td><td>The final thing you're trying to create. This might include multiple <code>cargo</code> packages, code in other languages, assets like icons or configuration files, and so on</td><td>Your complete game, including the website, public download storage, marketing materials, etc</td></tr>
+</tbody></table>
+</div>
+<p>There isn't a super-duper official definition for these terms (but they are kind of <a href="https://doc.rust-lang.org/book/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">discussed in The Book</a>).
+However, they seem to be used in these ways by the majority of the community, at least as far as I can tell.
+So if you use them this way, people will likely understand what you're talking about.</p>
+<p>In our case, I just want to be very clear what I'm referring to in this book.</p>
+<h3 id="a-cargo-package"><a class="header" href="#a-cargo-package">A cargo package</a></h3>
+<p>A <code>cargo</code> package is a happy little thing.
+Its favorite book is a <code>Cargo.toml</code> file, and its favorite food is a <code>src</code> directory.
+Neither of these are required by Rust, but the community has definitely settled on <code>cargo</code> as the sanctioned build tool.</p>
+<p>Let's start with the basics.
+We'll create a new package, called "whimsy".
+You can really pick any package name you like, but that's what I'll be using in this book.</p>
+<p>Open up your favorite command terminal, move to the directory where you want to create a new package folder, and (as usual) enter:</p>
+<pre><code class="language-bash">cargo new whimsy
+</code></pre>
+<h3 id="binary-vs-library"><a class="header" href="#binary-vs-library">Binary vs library</a></h3>
+<p>First, take a moment and check out what the output of the <code>cargo</code> command said:</p>
+<pre><code class="language-bash">Creating binary (application) `whimsy` package
+note: see more `Cargo.toml` keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+</code></pre>
+<p>The important thing here is that you've created a <em>binary</em> package.
+This means that Rust will build an executable program that you can run.</p>
+<p>But the other option is to create a library package: this just creates a 'library' binary, which can't be run on its own, but other programs can use the functionality inside that library.
+Your probably very familiar with this kind of package, even if you didn't know it.
+When you add a new dependency to your package, via <code>cargo add rand</code> for instance, or adding it to the <code>[dependencies]</code> section of your Cargo.toml, you're actually adding a library!</p>
+<div id="admonition-creating-library-packages-with-cargo" class="admonition admonish-note" role="note" aria-labelledby="admonition-creating-library-packages-with-cargo-title">
+<div class="admonition-title">
+<div id="admonition-creating-library-packages-with-cargo-title">
+<p>Creating library packages with cargo</p>
+</div>
+<a class="admonition-anchor-link" href="chapter_1/chapter_1_0.html#admonition-creating-library-packages-with-cargo"></a>
+</div>
+<div>
+<p>If you haven't created a library before, you would just add <code>--lib</code> to the command line, like this: <code>cargo new --lib whimsylib</code>.
+We don't want that just now, as we're happy with a binary package.
+But I wanted to point it out so you know how you can do this in the future.</p>
+</div>
+</div>
+<h4 id="why-not-both"><a class="header" href="#why-not-both">Why not both?</a></h4>
+<p>In Rust, it's even possible to have a package create both a library and a binary!
+This is often useful if you want to provide both a default command line tool or other application that uses your library,
+as well as provide the ability for others to use the library functionality in their own programs.</p>
+<p>(The general idea is to have both a <code>main.rs</code> and a <code>lib.rs</code> file in your <code>src</code> root tree, but there are <a href="https://doc.rust-lang.org/cargo/reference/cargo-targets.html#library">other ways</a> to do it as well.)</p>
+<h2 id="understanding-whats-inside"><a class="header" href="#understanding-whats-inside">Understanding what's inside</a></h2>
+<p>What happens when you ask <code>cargo</code> for a new package?
+Well, we can go through each file step by step and see what we've got.</p>
+<p>There are only a few files and directories created by default.</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>.git</code></td><td>Directory</td><td>Contains information for Git source control</td></tr>
+<tr><td><code>.gitignore</code></td><td>File</td><td>Used to exclude items from being tracked by source control</td></tr>
+<tr><td><code>Cargo.toml</code></td><td>File</td><td>Configuration file for the <code>cargo</code> package</td></tr>
+<tr><td><code>src</code></td><td>Directory</td><td>Convenient place so all source code is in one location</td></tr>
+<tr><td><code>src/main.rs</code></td><td>File</td><td>Rust source code, and the default crate root source file</td></tr>
+</tbody></table>
+</div>
+<h3 id="git-stuff"><a class="header" href="#git-stuff">Git stuff</a></h3>
+<p>Right away, we see a directory named <code>.git</code> and a file <code>.gitignore</code>.
+If you use Git, you'll be very familiar with these.
+If not, these files are used for the Git source control system, which I highly recommend you use.</p>
+<details id="admonition-get-git-youre-gonna-need-it" class="admonition admonish-warning" role="note" aria-labelledby="admonition-get-git-youre-gonna-need-it-title">
+<summary class="admonition-title">
+<div id="admonition-get-git-youre-gonna-need-it-title">
+<p>Get Git (You're gonna need it)</p>
+</div>
+<a class="admonition-anchor-link" href="chapter_1/chapter_1_0.html#admonition-get-git-youre-gonna-need-it"></a>
+</summary>
+<div>
+<p>Using source control is an absolute must if you're going to be building anything beyond the simplest of projects.
+It effectively gives you the ability to time travel!
+(But only backward in time.)</p>
+<p>If you aren't yet, I do recommend that you use version control regularly.
+If you're not really up to speed on the topic, there are lots of <a href="https://docs.github.com/en/get-started/getting-started-with-git">great tutorials</a> online.</p>
+<p>You don't have to use Git, but it <em>is</em> what comes by default with a new cargo project.
+I'll assume in this book you've made the plunge, gotten Git installed, and learned a little about how to use it.</p>
+</div>
+</details>
+<p>Take a look and see what's inside the <a href="https://git-scm.com/docs/gitignore"><code>.gitignore</code></a> file - it's just a single entry:</p>
+<pre><code>/target
+</code></pre>
+<p>In Git-speak, this means that we should ignore everything under the <code>target</code> directory for source control purposes.
+The normal jargon for this is that items listed in the <code>.gitignore</code> file are "untracked", so you might hear it said that way as well.</p>
+<p>This makes sense, of course, since that's where <code>cargo</code> puts all your intermediate and final build outputs by default.
+These files change a lot, and can always be recreated from the source code, so we're happy to keep it like that for now.</p>
+<h3 id="source-code"><a class="header" href="#source-code">Source code</a></h3>
+<p>By default, <code>cargo</code> uses the <code>src</code> directory to hold all your base package source files (aka, your <code>.rs</code> files).
+You <em>can</em> put your source wherever you like, but this is the overwhelmingly standard setup in the Rust community.</p>
+<p>Because we asked for a binary package, <code>cargo</code> has created <code>src/main.rs</code> for us, with a simple "Hello world" style example main function.</p>
+<p>The name <code>main.rs</code> is simply a convention however.
+If you really wanted to, you could treat any file you like as the main entry point for your package.
+You can see the docs for the <a href="https://doc.rust-lang.org/cargo/reference/cargo-targets.html#binaries">[[bin]]</a> section of the <code>cargo</code> docs for more info.</p>
+<h3 id="cargo-configuration"><a class="header" href="#cargo-configuration">Cargo configuration</a></h3>
+<p>The final file created by <code>cargo</code> is <code>Cargo.toml</code>.
+This is the main configuration file that controls how <code>cargo</code> will build your package.</p>
+<p>There are a lot of options here, but for now, we're going to leave it as is.
+(We're going to be completely overhauling this file anyway when we create a workspace.)</p>
+<h2 id="cargo-vs-rust"><a class="header" href="#cargo-vs-rust">Cargo vs Rust</a></h2>
+<p>So if we look at the files that we generated from <code>cargo new</code>, we see that only <em>one</em> file is actually needed by Rust - namely the <code>main.rs</code> source file.
+All the rest of the files are either Git plumbing or <code>cargo</code> business.</p>
+<p>If you really wanted to, you could build this simple crate without even invoking <code>cargo</code>.
+Try entering the following from your package root:</p>
+<pre><code class="language-bash">rustc src/main.rs
+</code></pre>
+<p>You should get a runnable executable file in the same directory, called <code>main</code>.
+(Without extra options on the command line, <code>rustc</code> just picks the same name as the source file.)</p>
+<p>Try running the program:</p>
+<pre><code class="language-bash">./main
+</code></pre>
+<p>You should get the standard "Hello, world!" output.</p>
+<p>(You are free to delete this binary now, we won't need it again. The simplest way is just running <code>rm main</code>.)</p>
+<p>And with that we just built a Rust application without invoking <code>cargo</code> at all!</p>
+<p>But honestly, there are a ton of benefits to using <code>cargo</code>. Here's just a short, very incomplete, list:</p>
+<ul>
+<li><code>cargo</code> manages all the command line flags for rustc for you</li>
+<li><code>cargo</code> defines a couple default build configurations, called <code>dev</code> and <code>release</code>, which do what you probably think they do</li>
+<li><code>cargo</code> allows you to manage your build using a pretty user-friendly <a href="https://toml.io/en/">.toml</a> configuration file
+<ul>
+<li>there's lots of good support for .toml file editing in most IDEs</li>
+</ul>
+</li>
+<li><code>cargo</code> keeps all of your build outputs in the <code>target</code> directory by default, with easy ways to <code>clean</code> up your package folder</li>
+<li><code>cargo</code> manages the code for all your dependencies, building them, downloading them, upgrading them, etc</li>
+</ul>
+<p>These are all things you'd have to do manually without a good build system like <code>cargo</code>.
+But still, it's important to know what's on the Rust side of things as opposed to the <code>cargo</code> side.</p>
+<h2 id="moving-to-a-workspace"><a class="header" href="#moving-to-a-workspace">Moving to a workspace</a></h2>
+<p>While this setup is great for simple projects, we know we're going to need a bit more flexibility.
+Fortunately, <code>cargo</code> even has great support for this via the workspace functionality.</p>
+<p>When you're comfortable with the info covered here, hop over to the next section to start playing with workspaces!</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="chapter-11-creating-a-workspace"><a class="header" href="#chapter-11-creating-a-workspace">Chapter 1.1: Creating a Workspace</a></h1>
+<p>Now that we have a better understanding of what's in a Rust project, let's understand workspaces, which are collections of Rust projects.</p>
+<p>In this chapter, we'll learn how to <a href="chapter_1/chapter_1_1.html#moving-source-into-a-subproject">create and configure a workspace</a>, make sure we have our <a href="chapter_1/chapter_1_1.html#checking-that-everything-is-set-up-right">naming conventions</a> set up correctly, and ensure we can <a href="chapter_1/chapter_1_1.html#building-our-workspace">build and run</a> our project in a workspace environment.</p>
+<p>If you're comfortable with all these steps, feel free to jump into <a href="chapter_1/./chapter_1_2.html">Chapter 1.2</a>, where we'll dig into dependencies in a bit more depth.</p>
+<h2 id="moving-source-into-a-subproject"><a class="header" href="#moving-source-into-a-subproject">Moving source into a subproject</a></h2>
+<p>We're about to burn the house down.</p>
+<p>But before we do, let's save a few of the things from the old house.</p>
+<p><code>cargo</code> workspaces use subdirectories to manage subprojects.
+Basically, they expect to find a "normal" <code>cargo</code> project in some directory under your project root (in other words, a <code>Cargo.toml</code> file and whatever it needs to build the project).</p>
+<p>So in our case, starting from the barebones app we created in the <a href="chapter_1/./chapter_1/chapter_1.html">last section</a>, let's create a new folder at root called "whimsy-bin":</p>
+<pre><code class="language-bash">mkdir whimsy-bin
+</code></pre>
+<p>To make this folder look like a proper <code>cargo</code> project, we'll need a <code>Cargo.toml</code> as usual, and any source files referenced by the .toml.</p>
+<p>So we can simply move the <code>Cargo.toml</code> and src directory we already have right inside:</p>
+<pre><code class="language-bash">mv Cargo.toml whimsy-bin/.
+mv src/ whimsy-bin/.
+</code></pre>
+<p>We now have a fully functional <code>cargo</code> project in the whimsy-bin subdirectory.
+However, if we were to build from that directory right now, all the build outputs would go into the <code>whimsy-bin/target</code> folder, not the <code>target</code> folder in our project root.</p>
+<p>This is one of the things workspaces help you with.
+They allow you to have a single <code>target</code> directory with all the binaries and libraries you create from any of the subprojects.</p>
+<h2 id="making-our-workspace"><a class="header" href="#making-our-workspace">Making our workspace</a></h2>
+<p>So how do we create a workspace?</p>
+<p>The answer is simple: we just put a new, and <em>improved</em>, <code>Cargo.toml</code> in our project root.</p>
+<p>In your favorite text editor, create a new file named <code>Cargo.toml</code> at your project root, and add the following to the file:</p>
+<pre><code class="language-toml">[workspace]
+resolver = "2"
+members = ["whimsy-bin"]
+</code></pre>
+<p>What do these entries mean?</p>
+<h3 id="the-workspace-section"><a class="header" href="#the-workspace-section">The <code>workspace</code> section</a></h3>
+<p>The first line of the file just declares a toml section called "workspace".
+This is just what <code>cargo</code> expects when it reads in a toml file that contains a workspace.
+If you don't have this line, you'll see an error something like the following (you can run <code>cargo check</code> to see for yourself):</p>
+<pre><code class="language-bash">error: failed to parse manifest at `/home/code/whimsy/Cargo.toml`
+
+Caused by:
+  manifest is missing either a `[package]` or a `[workspace]`
+</code></pre>
+<p>Cargo kindly points out that it needs either a <code>[package]</code> or a <code>[workspace]</code> section to know how to proceed.
+So make sure you have that <code>[workspace]</code> line in there.</p>
+<h3 id="the-resolver-field"><a class="header" href="#the-resolver-field">The resolver field</a></h3>
+<p>This little field is called the <a href="https://doc.rust-lang.org/cargo/reference/features.html?highlight=resolver#feature-resolver-version-2">feature resolver</a>.
+Basically, this field tells <code>cargo</code> how to interpret various fields in the <code>Cargo.toml</code> file.
+Since we live in the future, you can keep this set to the <code>"2"</code> value.
+(It's possible but unlikely that this could change when the Rust 2024 edition comes out.)</p>
+<h3 id="the-members-field"><a class="header" href="#the-members-field">The members field</a></h3>
+<p>Finally, we get to the important field.
+This is where we specify where the subprojects for this workspace live.
+In our case, we only have a single subproject at the moment, and its <code>Cargo.toml</code> lives in the <code>whimsy-bin</code> folder.</p>
+<h2 id="checking-that-everything-is-set-up-right"><a class="header" href="#checking-that-everything-is-set-up-right">Checking that everything is set up right</a></h2>
+<p>Let's run <code>cargo check</code> at the workspace root, and see what it tells us:</p>
+<pre><code class="language-bash">    Checking whimsy v0.1.0 (/home/code/whimsy/whimsy-bin)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s
+</code></pre>
+<p>We can tell a few things from the state of our workspace now.</p>
+<p>First, to perform <code>cargo check</code>, you'll see that <code>cargo</code> created a target directory.
+<code>cargo</code> needed to do this to perform all its checks.
+We didn't create a binary yet, however, but its interesting to remember that <code>cargo</code> needs to do a lot of work just to run <code>cargo check</code>.</p>
+<p>Second, we see no output, positive or negative, about anything related to our workspace's <code>Cargo.toml</code> file.
+That's good news!
+It means it's set up correctly, and <code>cargo</code> just avoids outputting anything at all here, as it's the most common case.</p>
+<p>Third, look carefully at the "Checking" line.
+There's something concerning here:</p>
+<ul>
+<li>It appears that it is checking a package named <code>whimsy</code> (you can tell since it says <code>Checking whimsy v0.1.0</code>)</li>
+<li>But the package lives in the <code>whimsy-bin</code> subdirectory (you can tell since it outputs the directory on the same line)</li>
+</ul>
+<p>While this isn't strictly a problem, it does go against a loose convention in the Rust world.
+Ideally, we should have each package named the same as its directory.</p>
+<p>So how do we fix this?
+Simple!
+Open up the config at <code>whimsy-bin/Cargo.toml</code>.
+You'll see some lines like:</p>
+<pre><code class="language-toml">[package]
+name = "whimsy"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+</code></pre>
+<p>That's definitely the culprit.
+Bad, naughty, shameful <code>name</code> field!
+But it's easy enough to fix.</p>
+<p>Open up the file and change <code>whimsy</code> to <code>whimsy-bin</code>.</p>
+<p>Now when we run <code>cargo check</code> again, everything looks good.
+We have verified that both our workspace and our binary project are both set up and ready to rock.</p>
+<h2 id="building-our-workspace"><a class="header" href="#building-our-workspace">Building our workspace</a></h2>
+<p>Let's see what happens with our new workspace if we do a normal build and run:</p>
+<pre><code class="language-bash">cargo build
+</code></pre>
+<p>This should produce no errors.
+If it did, sacrifice a virtual goat to the <code>cargo</code> gods, fix the errors and try again.</p>
+<p>Now we can run it:</p>
+<pre><code class="language-bash">cargo run
+</code></pre>
+<p>With any luck, you should get a successful run, with the traditional "Hello, world!" output.
+If you did not, sacrifice a virtual chicken to the <code>cargo</code> gods, fix the errors and try again.</p>
+<h2 id="next-up"><a class="header" href="#next-up">Next up</a></h2>
+<p>Whew!
+That wasn't a ton of code, but we got a lot done!</p>
+<p>Or did we?</p>
+<p>While it may not feel like it at the moment, we're preparing ourselves for a cleaner future.
+We happen to only have a single project in our workspace at the moment, but that will change.
+And when it does, <em>we will be ready</em>.</p>
+<p>And when <em>you</em> are ready, and you feel like you've internalized what's gone down here, go ahead and hop to the next section, all about dependencies.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="chapter-12-managing-dependencies"><a class="header" href="#chapter-12-managing-dependencies">Chapter 1.2: Managing dependencies</a></h1>
+<p>So far, we have basically the bestest most killer app of all time.
+It says hello to the world, and exits.
+It really doesn't get better than that.</p>
+<p>Unless...</p>
+<p>What if we were to reply back with a random number as well?</p>
+<p>In this chapter, we'll add a dependency <a href="chapter_1/chapter_1_2.html#whats-the-solution">the workspace way</a>, understand <a href="chapter_1/chapter_1_2.html#best-practices">semantic versioning</a> as it's used in Rust, and get a bit of insight into <a href="chapter_1/chapter_1_2.html#cargolock">the <code>Cargo.lock</code> file</a>.</p>
+<p>If you're comfortable with these topics, then head over to <a href="chapter_1/./chapter_1_3.html">Chapter 1.3</a>, where we'll meet everyone's favorite helper, Clippy!</p>
+<h2 id="adding-dependencies-its-weird"><a class="header" href="#adding-dependencies-its-weird">Adding dependencies (it's weird)</a></h2>
+<p>Ok, we want to spit out a random number along with our hello world message.
+No big deal.
+Right?</p>
+<p>Let's see what happens if we follow the usual pattern.
+Back in the terminal, let's add a dependency on the <code>rand</code> crate.
+Run the following from your workspace root:</p>
+<pre><code class="language-bash">cargo add rand
+</code></pre>
+<p>Now, let's modify our <code>main.rs</code> to use this.
+Maybe now we want something like this:</p>
+<pre><pre class="playground"><code class="language-rust">use rand::Rng;
+
+fn main() {
+    let random_value = rand::thread_rng().gen_range(1..101);
+    println!("Hello, world! Your random number is: {random_value}");
+}</code></pre></pre>
+<p>If we build and run this (say, via <code>cargo run</code>), we get just what we expect!</p>
+<pre><code class="language-bash">Hello, world! Your random number is: 96
+</code></pre>
+<p>YMMV on the exact output, of course.</p>
+<p>Looks great, but there's something interesting going on.</p>
+<h2 id="wheres-my-dependency-at"><a class="header" href="#wheres-my-dependency-at">Where's my dependency at?</a></h2>
+<p>If you look at your <code>whimsy-bin/Cargo.toml</code>, you'll see that we've now added the dependency, just like we'd expect:</p>
+<pre><code class="language-toml">[dependencies]
+rand = "0.8.5"
+</code></pre>
+<p>So what's the problem?</p>
+<p>Well, let's say we have a library package as well as a binary package.
+And let's say they both use the <code>rand</code> crate.
+There's a danger that the dependencies could get out of sync between each other.</p>
+<p>While that's not a problem in itself, it <em>is</em> a problem if the two <code>rand</code> versions are incompatible.
+As it turns out, while building a binary, Rust will only ever build <em>one</em> version of a given crate.</p>
+<p>If you think about it, this makes sense.
+If Rust were to build version <code>rand</code> version <code>0.6.3</code> for the library, and then version <code>0.8.5</code> for the binary, how would we link everything together?</p>
+<p>(If you're not familiar with the linking process, then just trust me - this gets hairy real fast.)</p>
+<p>So Rust will choose one version of a library to build, then use that version for every library and binary that depend on it.</p>
+<h3 id="whats-the-solution"><a class="header" href="#whats-the-solution">What's the solution?</a></h3>
+<p>The solution to this potential for mismatch is, of course, to use the workspace!</p>
+<p>As it turns out, there's a dependencies section in the workspace as well.
+We want to move our <code>rand</code> dependency there, and then tell the <code>whimsy-bin</code> project to use the version referenced by the workspace.</p>
+<p>Easy enough!
+In your workspace's Cargo.toml, add the following:</p>
+<pre><code class="language-toml">[workspace.dependencies]
+rand = "0.8.5"
+</code></pre>
+<p>And now in <code>whimsy-bin/Cargo.toml</code>, modify the dependencies section to look like this:</p>
+<pre><code class="language-toml">[dependencies]
+rand.workspace = true
+</code></pre>
+<p>What we're doing here is telling the <code>whimsy-bin</code> project to use whatever version of <code>rand</code> that's specified in the workspace.</p>
+<p>Now, if we were to add the <code>rand</code> dependency to another library in our workspace, we'd just add that same <code>rand.workspace = true</code> line to the library's <code>Cargo.toml</code>.</p>
+<p>This is how we ensure all the different packages in our workspace are compatible, or at least as far as dependencies are concerned.</p>
+<h2 id="best-practices"><a class="header" href="#best-practices">Best practices</a></h2>
+<p>This is all well and good, but there's one more thing we should take a look at.
+Currently, we're specifying version <code>0.8.5</code> of the <code>rand</code> crate.</p>
+<p>What does this actually mean?</p>
+<p>Well, cargo <a href="https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html">dependency version specifications</a> are more complicated than you'd think.
+Just saying we want version <code>0.8.5</code> does not guarantee that we'll get exactly that version.</p>
+<h3 id="oh-no-its-semver-isnt-it"><a class="header" href="#oh-no-its-semver-isnt-it">Oh no it's semver isn't it</a></h3>
+<p>Yes.
+Yes it is semver.</p>
+<p>If you haven't run into how Rust uses <a href="https://doc.rust-lang.org/cargo/reference/semver.html">semantic versioning</a>, you probably didn't even realize that it could be so strange.</p>
+<p>Long story short, specifying your version as the exact string <code>0.8.5</code> really means: Rust is able to use any version of this library that has version <code>0.8.X</code>, where <code>X</code> is any value 5 or greater.</p>
+<h4 id="what-do-the-three-numbers-mean-again"><a class="header" href="#what-do-the-three-numbers-mean-again">What do the three numbers mean again?</a></h4>
+<p>If you have version <code>X.Y.Z</code> of a library, then you have:</p>
+<ul>
+<li>Major version <code>X</code></li>
+<li>Minor version <code>Y</code></li>
+<li>Patch version <code>Z</code></li>
+</ul>
+<p>Except when the major version is exactly <code>0</code>, then <code>Y</code> is treated as the major version, and <code>Z</code> as the minor version, with no patch version specification.</p>
+<p>(Yes this is a weird and stupid exception, but there actually are good historical reasons for this being the case in the Rust community.
+Mostly it boils down to people not wanting to commit to "true" major version <code>1</code> while they're still hammering out the code, so we needed some way to tell
+<code>cargo</code> that it was okay to bump the <code>Z</code> value like a minor version if <code>X</code> was zero. Life is grand sometimes.)</p>
+<h3 id="so-why-are-we-discussing-this-again"><a class="header" href="#so-why-are-we-discussing-this-again">So why are we discussing this again?</a></h3>
+<p>Remember that we're trying to keep our dependencies as compatible as possible - not just in our own workspace packages, but also against those dependencies we pull in as helper libraries.</p>
+<p>Now, there are all sorts of ways to "pin" a library to a specific version, to specify specific version ranges, to allow variation in either the major,
+minor, or patch version numbers.
+But we aren't so concerned about all that, we just want to make sure that Rust doesn't use a completely incompatible version.</p>
+<p>As it turns out, you can do this by just chopping off the bits you don't care about.
+So if we have version <code>0.8.5</code>, the rules of semver tell us that the crate author should not be committing any "breaking changes" if the next crate version
+still starts with <code>0.8</code>. (Defining "breaking changes" is a super complex topic on its own, but not worth diving into here.)</p>
+<p>For us, it means that we can relax our requirements a bit in our workspace.
+This is a good thing!</p>
+<p>Imagine that we release a library into the world.
+And let's say that we only specify version <code>0.8</code>.
+Then anyone using that library could relying on version <code>0.8.2</code> specifically if they really wanted, and our library would still be compatible.
+If we still had <code>0.8.5</code>, that other person wouldn't be able to use our library, because their version wouldn't match ours.
+Oh woe be to those who have legacy codebases and requirements!</p>
+<h3 id="so-lets-fix-it"><a class="header" href="#so-lets-fix-it">So let's fix it</a></h3>
+<p>Let's change how we require the <code>rand</code> crate in our workspace.
+Jump into <code>./Cargo.toml</code> and update the rand dependency line to the following:</p>
+<pre><code class="language-toml">rand = "0.8"
+</code></pre>
+<p>Note that because we're changing it in the workspace, and because all our child projects refer to the version in the workspace, all our projects are updated for free!</p>
+<h3 id="theres-always-a-catch"><a class="header" href="#theres-always-a-catch">There's always a catch</a></h3>
+<p>But not so fast!
+What <em>actually</em> happened when we made that change?</p>
+<p>This is the realm of <code>Cargo.lock</code>, a mysterious, little-understood denizen of the dark forest we call Cargo-internals.</p>
+<h2 id="cargolock"><a class="header" href="#cargolock">Cargo.lock</a></h2>
+<p>You've probably noticed this file from time to time.
+You've probably also been told not to edit it.
+In fact, it even comes with a warning sign to any small children who think they see candy inside:</p>
+<pre><code class="language-toml"># This file is automatically @generated by Cargo.
+# It is not intended for manual editing.
+version = 3
+</code></pre>
+<p>Those are the first few lines of the Cargo.lock file for our project.</p>
+<div id="admonition-quote" class="admonition admonish-quote" role="note" aria-labelledby="admonition-quote-title">
+<div class="admonition-title">
+<div id="admonition-quote-title">
+<p>Quote</p>
+</div>
+<a class="admonition-anchor-link" href="chapter_1/chapter_1_2.html#admonition-quote"></a>
+</div>
+<div>
+<p>not intended for manual editing</p>
+<p>- <em>Cargo.lock, 2024, laughing probably</em></p>
+</div>
+</div>
+<p>Let's explore this file a little bit to see if we can better understand what it's doing.</p>
+<h3 id="dependency-entries"><a class="header" href="#dependency-entries">Dependency entries</a></h3>
+<p>If we take a look at Cargo.lock in an editor, we see a bunch of entries, for lots of dependencies.
+In our case, the first such dependency looks like this:</p>
+<pre><code class="language-toml">[[package]]
+name = "byteorder"
+version = "1.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b"
+</code></pre>
+<p>What the heck?
+We never asked for a <code>byteorder</code> dependency.
+What's going on?</p>
+<p>Well, whenever you aren't sure why something is showing up in your project, you can use a handy tool called <code>cargo tree</code> to sort it out.
+Let's try it.</p>
+<p>From your terminal, type:</p>
+<pre><code class="language-bash">cargo tree
+</code></pre>
+<p>You should see some super fancy ASCII graphics, and also some boring dependency chains.
+Probably something like this:</p>
+<pre><code class="language-bash">whimsy-bin v0.1.0 (/home/code/whimsy/whimsy-bin)
+└── rand v0.8.5
+    ├── libc v0.2.162
+    ├── rand_chacha v0.3.1
+    │   ├── ppv-lite86 v0.2.20
+    │   │   └── zerocopy v0.7.35
+    │   │       ├── byteorder v1.5.0
+    │   │       └── zerocopy-derive v0.7.35 (proc-macro)
+    │   │           ├── proc-macro2 v1.0.89
+    │   │           │   └── unicode-ident v1.0.13
+    │   │           ├── quote v1.0.37
+    │   │           │   └── proc-macro2 v1.0.89 (*)
+    │   │           └── syn v2.0.87
+    │   │               ├── proc-macro2 v1.0.89 (*)
+    │   │               ├── quote v1.0.37 (*)
+    │   │               └── unicode-ident v1.0.13
+    │   └── rand_core v0.6.4
+    │       └── getrandom v0.2.15
+    │           ├── cfg-if v1.0.0
+    │           └── libc v0.2.162
+    └── rand_core v0.6.4 (*)
+</code></pre>
+<p>After a quick inspection, we can see that <code>byteorder</code> is being brought into our project because <code>zerocopy</code> uses it, and <code>ppv-lite86</code> uses <code>zerocopy</code>, <code>rand_chacha</code> uses <code>ppv-lite86</code>, and finally the <code>rand</code> crate uses <code>rand_chacha</code>.</p>
+<p>So it makes sense why <code>byteorder</code> is in our dependencies, just a bit hidden.
+(This is one of the things I love about <code>cargo</code>: it manages all of this for us.)</p>
+<h3 id="okay-so-what-about-the-cargolock-entry"><a class="header" href="#okay-so-what-about-the-cargolock-entry">Okay, so what about the <code>Cargo.lock</code> entry?</a></h3>
+<p>Let's take another look at that entry in <code>Cargo.lock</code>, now that we understand why <code>byteorder</code> is there at all.
+It looks like this:</p>
+<pre><code class="language-toml">[[package]]
+name = "byteorder"
+version = "1.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b"
+</code></pre>
+<p>We can guess what the checksum is there for (security stuff mumble mumble).
+We can even see where it pulled the crate data from, in the <code>source</code> line.</p>
+<p>We also see a version.
+And it's a fully specified semver version too.</p>
+<p><em>This</em> is what <code>Cargo.lock</code> is for.</p>
+<p>Remember how we changed our <code>rand</code> version dependency to <code>0.8</code> instead of <code>0.8.5</code>?
+Well, if we hunt down the section in <code>Cargo.lock</code> that references <code>rand</code>, we see:</p>
+<pre><code class="language-toml">[[package]]
+name = "rand"
+version = "0.8.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "34af8d1a0e25924bc5b7c43c079c942339d8f0a8b57c39049bef581b46327404"
+dependencies = [
+ "libc",
+ "rand_chacha",
+ "rand_core",
+]
+</code></pre>
+<p>First, we pat ourselves on the back because we already knew that <code>rand_chacha</code> was a required dependency, because we went full nerd with <code>cargo tree</code>.</p>
+<p>But then, we see that the version says <code>0.8.5</code>. Not <code>0.8</code>, but the full <code>0.8.5</code>.</p>
+<h3 id="but-hang-on-we-didnt-change-anything-since-we-edited-the-version-number"><a class="header" href="#but-hang-on-we-didnt-change-anything-since-we-edited-the-version-number">But hang on, we didn't change anything since we edited the version number!</a></h3>
+<p>Just to make sure this is real, let's try an experiment.</p>
+<p>As it happens, <code>Cargo.toml</code> isn't <em>needed</em> when you do a build.
+It can be regenerated at any time when you need it.</p>
+<p>So let's Lazarus this thing.
+In your terminal:</p>
+<pre><code class="language-bash">rm Cargo.lock
+</code></pre>
+<p>Now do anything that needs the dependencies to be fully fleshed out.
+You can run <code>cargo check</code>, <code>cargo build</code> or something like that.</p>
+<p>Now take a look at the <code>rand</code> entry in your regenerated <code>Cargo.lock</code>.
+It should still reference <code>0.8.5</code>.</p>
+<p>So what <code>Cargo.lock</code> is doing is now a bit more clear:</p>
+<ul>
+<li>It "reifies" our dependency version numbers from our version requests in <code>Cargo.toml</code>
+<ul>
+<li>This is a fancy word meaning it takes the fluffy semver specification we have in our <code>Cargo.toml</code> and picks a real version of the library in question</li>
+</ul>
+</li>
+<li>It keeps track of what version we have already downloaded so we don't have to redownload every build</li>
+<li>(Some other magic, but it's not too important at this point)</li>
+</ul>
+<p>There's a little more to the story, like being able to make fully reproducible builds (because you have such detailed info to compare against), and some other things.
+But hopefully now you'll understand better why <code>Cargo.lock</code> is there and what it's used for.</p>
+<h2 id="tidying-up"><a class="header" href="#tidying-up">Tidying up</a></h2>
+<p>We covered an awful lot about dependencies here, probably more than you wanted to know.
+But when you feel like you have a good handle on things, let's move onto something that can actually make your life a bit better.</p>
+<p>Clippy!</p>
+<div id="admonition-i-see-that-youre-trying-to-avoid-doing-real-work-would-you-like-to-continue" class="admonition admonish-note" role="note" aria-labelledby="admonition-i-see-that-youre-trying-to-avoid-doing-real-work-would-you-like-to-continue-title">
+<div class="admonition-title">
+<div id="admonition-i-see-that-youre-trying-to-avoid-doing-real-work-would-you-like-to-continue-title">
+<p>I see that you're trying to avoid doing real work. Would you like to continue?</p>
+</div>
+<a class="admonition-anchor-link" href="chapter_1/chapter_1_2.html#admonition-i-see-that-youre-trying-to-avoid-doing-real-work-would-you-like-to-continue"></a>
+</div>
+<div>
+<ul>
+<li><a href="chapter_1/./chapter_1/chapter_1_3.html">Yes</a></li>
+<li><a href="https://old.reddit.com/r/rust">No</a></li>
+<li>I wish I had real work</li>
+</ul>
+</div>
+</div>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="chapter-13-clippy"><a class="header" href="#chapter-13-clippy">Chapter 1.3: Clippy</a></h1>
+<p>There are many great things about Rust.
+But one of them certainly has to be the tooling support.</p>
+<p>In this chapter, we're going to become better friends with Clippy. We'll try <a href="chapter_1/chapter_1_3.html#linting">linting with <code>cargo check</code></a> first, try linting with Clippy and its <a href="chapter_1/chapter_1_3.html#what-linting-can-provide">pedantic</a> mode, and learn through the pedantic output how Clippy can teach us about using the type system to enhance readability and correctness,</p>
+<h2 id="linting"><a class="header" href="#linting">Linting</a></h2>
+<p>Clippy is a tool that replaces the default <code>cargo check</code> functionality with an even bigger set of linting tests.
+If you haven't come across the concpet of linting your code before, here's a little primer.</p>
+<p>Basically, making sure your code gets through the compiler is often just one step of writing correct code.</p>
+<p>Let's add the following code to <code>whimsy-bin/src/main.rs</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>struct Wonderland {
+    tea_party: bool,
+    danger: bool,
+}
+
+impl Wonderland {
+    fn assess_surroundings(
+        &amp;mut self,
+        alice: bool,
+        mad_hatter: bool,
+        white_rabbit: bool,
+        jabberwocky: bool,
+        queen_of_hearts: bool,
+        tweedledee: bool,
+    ) {
+        if alice || mad_hatter || white_rabbit {
+            self.tea_party = true;
+        }
+        if jabberwocky || queen_of_hearts {
+            self.danger = true;
+        }
+    }
+}
+
+impl std::fmt::Display for Wonderland {
+    fn fmt(&amp;self, fmt: &amp;mut std::fmt::Formatter&lt;'_&gt;) -&gt; std::fmt::Result {
+        write!(
+            fmt,
+            "Wonderland: Tea Party: {}, Danger: {}",
+            self.tea_party, self.danger
+        )
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>This definitely compiles, and likely does what you want it to do.
+However, when users are actually using this function, it probably looks pretty weird.
+Let's try it by changing our <code>main</code> function in <code>whimsy-bin/src/main.rs</code>:</p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let mut wonderland = Wonderland {
+        tea_party: false,
+        danger: false,
+    };
+    wonderland.assess_surroundings(true, true, false, false, false, true);
+    println!("{wonderland}");
+}</code></pre></pre>
+<p>This is technically correct code, and it compiles.
+But it's certainly not very readable.
+What do all those <code>true</code> and <code>false</code> parameters mean?
+It's certainly not obvious at a glance, and that means anyone reading this in the future will have to read the function definition to make sense of it.</p>
+<h2 id="linting-with-cargo-check"><a class="header" href="#linting-with-cargo-check">Linting with <code>cargo check</code></a></h2>
+<p>Ensuring the code you write follows community standards, catching common logic mistakes, and even catching things that could turn into bugs later, are all things that are provided by linters.</p>
+<p>Linting is a companion process to compilation.
+Some linters are built into the compiler you're using (like we will use via <code>cargo check</code>), while others are external tools provided by the community (like Clippy).</p>
+<p>Let's see what happens with the default linting.
+Try running the following command from inside your workspace:</p>
+<pre><code class="language-bash">cargo check
+</code></pre>
+<p>You will probably see some output like the following:</p>
+<pre><code class="language-bash">    Checking whimsy-bin v0.1.0 (/home/code/whimsy/whimsy-bin)
+warning: unused variable: `tweedledee`
+  --&gt; whimsy-bin/src/main.rs:16:9
+   |
+16 |         tweedledee: bool,
+   |         ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_tweedledee`
+   |
+   = note: `#[warn(unused_variables)]` on by default
+
+warning: `whimsy-bin` (bin "whimsy-bin") generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.06s
+</code></pre>
+<p>How sweet of <code>cargo check</code>, it noticed that we haven't used the <code>tweedledee</code> variable.</p>
+<p>If you have a bit of programming experience under your belt, you're probably already aware why this kind of warning is so useful.
+There are a lot of reasons that unused variables might be a bad thing:</p>
+<ul>
+<li>You have forgotten to include the logic that uses that variable</li>
+<li>Your code no longer needs to care about that variable</li>
+<li>You actually need the variable, but only to satisfy an external contract (like a trait function signature)</li>
+<li>You mistyped</li>
+<li>You find the compiler output too boring unless there are warnings emitted (and you are probably a former C++ programmer)</li>
+</ul>
+<p>I can tell you from my own experience - working with Rust, you should strive to have a warning free compilation.
+If you have no warnings, you've already covered the logical or procedural errors in the above list, but you also get some other benefits:</p>
+<ul>
+<li>New programmers to your project don't need to spend time understanding each warning, and deciding if it needs to be addressed
+<ul>
+<li>This includes when they add new code</li>
+<li>And this also includes yourself in three days once you've forgotten everything about this part of the codebase</li>
+</ul>
+</li>
+<li>The warnings are usually an indication of a code smell, and addressing them will make your code more readable (and potentially more correct)</li>
+<li>Whenever you introduce a new warning, it is immediately obvious, instead of being buried in the middle of thirty other unrelated warnings</li>
+</ul>
+<p>So let's fix this warning.
+The easiest thing is to remove the variable from the list of arguments in the function, and remove the last boolean from the function call:</p>
+<pre><code class="language-diff">    fn assess_surroundings(
+        &amp;mut self,
+        alice: bool,
+        mad_hatter: bool,
+        white_rabbit: bool,
+        jabberwocky: bool,
+        queen_of_hearts: bool,
+-       tweedledee: bool,
+    )
+</code></pre>
+<p>and</p>
+<pre><code class="language-diff">-wonderland.assess_surroundings(true, true, false, false, false, true);
++wonderland.assess_surroundings(true, true, false, false, false);
+</code></pre>
+<p>Now, if we run <code>cargo check</code> again, we get a clean bill of health!</p>
+<h3 id="what-linting-can-provide"><a class="header" href="#what-linting-can-provide">What linting can provide</a></h3>
+<p>But we're not really as healthy as we might think.</p>
+<p>Now let's see what happens if we use Clippy for linting.
+Clippy is the community standard linter for Rust, as opposed to <code>cargo check</code>, which is included in <code>rustc</code>.
+If you're using <code>rustup</code> to manage your Rust installations, both will already be installed.
+Try running the following:</p>
+<pre><code class="language-bash">cargo clippy -- -W clippy::pedantic
+</code></pre>
+<details id="admonition-clippy-not-installed" class="admonition admonish-warning" role="note" aria-labelledby="admonition-clippy-not-installed-title">
+<summary class="admonition-title">
+<div id="admonition-clippy-not-installed-title">
+<p>Clippy not installed?</p>
+</div>
+<a class="admonition-anchor-link" href="chapter_1/chapter_1_3.html#admonition-clippy-not-installed"></a>
+</summary>
+<div>
+<p>If you don't have clippy installed, check out the <a href="https://doc.rust-lang.org/clippy/installation.html">installation page</a> in the Clippy docs.</p>
+</div>
+</details>
+<p>If everything worked correctly, you probably saw something like the following output:</p>
+<pre><code class="language-bash">warning: more than 3 bools in function parameters
+  --&gt; whimsy-bin/src/main.rs:18:5
+   |
+18 | /     fn assess_surroundings(
+19 | |         &amp;mut self,
+20 | |         alice: bool,
+21 | |         mad_hatter: bool,
+...  |
+31 | |         }
+32 | |     }
+   | |_____^
+   |
+   = help: consider refactoring bools into two-variant enums
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#fn_params_excessive_bools
+   = note: `-W clippy::fn-params-excessive-bools` implied by `-W clippy::pedantic`
+   = help: to override `-W clippy::pedantic` add `#[allow(clippy::fn_params_excessive_bools)]`
+</code></pre>
+<p>Right away, Clippy caught this readability problem we were seeing.
+The interesting bit about the error message is the big warning at the top: <code>warning: more than 3 bools in function parameters</code>.</p>
+<p>If perhaps you want to understand more about why this lint flags what it does, you can follow <a href="https://rust-lang.github.io/rust-clippy/master/index.html#fn_params_excessive_bools">the link in the output</a>
+to get more information.
+This can be particularly useful if you have no idea what a particular lint is trying to tell you, or if you're wondering how to fix it.</p>
+<h3 id="making-clippy-happy"><a class="header" href="#making-clippy-happy">Making Clippy happy</a></h3>
+<p>Let's follow the guidance provided by the <a href="https://rust-lang.github.io/rust-clippy/master/index.html#fn_params_excessive_bools">lint help link</a>.
+Let's rewrite the <code>impl Wonderland</code> area of the code as follows:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum AlicePresence {
+    Present,
+    Absent,
+}
+
+enum MadHatterSanity {
+    Sane,
+    Insane,
+}
+
+enum WhiteRabbitPunctuality {
+    OnTime,
+    VeryVeryLate,
+}
+
+enum JabberwockyPresence {
+    Present,
+    Absent,
+}
+
+enum QueenOfHeartsMood {
+    Happy,
+    Angry,
+}
+
+impl Wonderland {
+    fn assess_surroundings(
+        &amp;mut self,
+        alice: AlicePresence,
+        mad_hatter: MadHatterSanity,
+        white_rabbit: WhiteRabbitPunctuality,
+        jabberwocky: JabberwockyPresence,
+        queen_of_hearts: QueenOfHeartsMood,
+    ) {
+        self.tea_party = matches!(alice, AlicePresence::Present)
+            || matches!(mad_hatter, MadHatterSanity::Sane)
+            || matches!(white_rabbit, WhiteRabbitPunctuality::OnTime);
+        self.danger = matches!(jabberwocky, JabberwockyPresence::Present)
+            || matches!(queen_of_hearts, QueenOfHeartsMood::Angry);
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>And we then rewrite our call to <code>assess_surroundings</code> in <code>whimsy-bin/src/main.rs#main</code> to match the new function signature:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>wonderland.assess_surroundings(
+    AlicePresence::Present,
+    MadHatterSanity::Sane,
+    WhiteRabbitPunctuality::VeryVeryLate,
+    JabberwockyPresence::Absent,
+    QueenOfHeartsMood::Happy,
+);
+<span class="boring">}</span></code></pre></pre>
+<p>You can hopefully see immediately that not only is the function signature for <code>assess_surroundings</code> more descriptive,
+but our call into the function is more expressive of the situation.</p>
+<p>This is at the price of having a bunch of one-time-use structs just for the function parameters, so it's not <em>always</em> the best answer. But let's roll with it for now.</p>
+<p>Try running Clippy in pedantic mode again:</p>
+<pre><code class="language-bash">cargo clippy -- -W clippy::pedantic
+</code></pre>
+<h3 id="putting-the-antic-back-in-pedantic"><a class="header" href="#putting-the-antic-back-in-pedantic">Putting the 'antic' back in 'Pedantic'</a></h3>
+<p>Holy backfire, Batman!</p>
+<p>We're now confronted by a ton of new errors.
+This is the downside of using the pedantic mode.
+While it will definitely catch some really interesting things, like the readability issues above, it will also catch a lot of other things that are either more minor, or even false positives.</p>
+<p>In this case, we're seeing a bunch of things like this:</p>
+<pre><code class="language-bash">warning: this argument is passed by value, but not consumed in the function body
+  --&gt; whimsy-bin/src/main.rs:40:26
+   |
+40 |         queen_of_hearts: QueenOfHeartsMood,
+   |                          ^^^^^^^^^^^^^^^^^ help: consider taking a reference instead: `&amp;QueenOfHeartsMood`
+   |
+help: consider marking this type as `Copy`
+  --&gt; whimsy-bin/src/main.rs:28:1
+   |
+28 | enum QueenOfHeartsMood {
+   | ^^^^^^^^^^^^^^^^^^^^^^
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_pass_by_value
+</code></pre>
+<p>We see why this was called pedantic now.</p>
+<p>We're going to hold off on fixing these warnings for the time being - in the next few chapters, we'll get a better handle on things, so you won't have to wait long.</p>
+<h2 id="using-the-type-system-to-enforce-code-constraints"><a class="header" href="#using-the-type-system-to-enforce-code-constraints">Using the type system to enforce code constraints</a></h2>
+<p>This entire refactor is an example of using the type system to express constraints directly into your code.
+By forcing users to use a custom type for each parameter, we guarantee they cannot call <code>assess_surroundings</code> in the wrong way,
+even if it were to be refactored to move the order of the arguments around.</p>
+<h3 id="how-would-you-change-the-struct-definition"><a class="header" href="#how-would-you-change-the-struct-definition">How would you change the struct definition?</a></h3>
+<p>Knowing what you know now about using custom <code>enum</code> types to assist in both readability and mistake prevention, look again at the definition of the <code>Wonderland</code> struct.
+(The part where we declare both <code>tea_party</code> and <code>danger</code> as bools.)</p>
+<p>How could you change this struct so the fields are more representative of the information we're trying to capture?</p>
+<p>Can you think of a way to use the type system to prevent misunderstandings?</p>
+<h3 id="one-possible-solution"><a class="header" href="#one-possible-solution">One possible solution</a></h3>
+<p>There are a lot of ways to address the current situation.
+You might pick something like the following:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum TeaPartyStatus {
+    TeaIsServed,
+    TeaIsNotServed,
+}
+
+enum DangerLevel {
+    AsDangerousAsSleepingPuppies,
+    RunForYourLife,
+}
+
+struct Wonderland {
+    tea_party: TeaPartyStatus,
+    danger: DangerLevel,
+}
+<span class="boring">}</span></code></pre></pre>
+<p>You would, of course, need to update the places that were previously referring to the <code>bool</code> style, but the important note is that
+we have a much clearer and readable way of informing readers what these fields are being used for.</p>
+<p>I'll include the complete source file (<code>whimsy-bin/src/main.rs</code>) so far in case you're following along.</p>
+<p>The key point to note is how clean and readable the <code>main</code> function now is, and how it clearly expresses what's happening at each step.</p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let mut wonderland = Wonderland {
+        tea_party: TeaPartyStatus::TeaIsNotServed,
+        danger: DangerLevel::AsDangerousAsSleepingPuppies,
+    };
+    wonderland.assess_surroundings(
+        AlicePresence::Present,
+        MadHatterSanity::Sane,
+        WhiteRabbitPunctuality::VeryVeryLate,
+        JabberwockyPresence::Absent,
+        QueenOfHeartsMood::Happy,
+    );
+    println!("{wonderland}");
+}
+
+enum TeaPartyStatus {
+    TeaIsServed,
+    TeaIsNotServed,
+}
+
+enum DangerLevel {
+    AsDangerousAsSleepingPuppies,
+    RunForYourLife,
+}
+
+struct Wonderland {
+    tea_party: TeaPartyStatus,
+    danger: DangerLevel,
+}
+
+enum AlicePresence {
+    Present,
+    Absent,
+}
+
+enum MadHatterSanity {
+    Sane,
+    Insane,
+}
+
+enum WhiteRabbitPunctuality {
+    OnTime,
+    VeryVeryLate,
+}
+
+enum JabberwockyPresence {
+    Present,
+    Absent,
+}
+
+enum QueenOfHeartsMood {
+    Happy,
+    Angry,
+}
+
+impl Wonderland {
+    fn assess_surroundings(
+        &amp;mut self,
+        alice: AlicePresence,
+        mad_hatter: MadHatterSanity,
+        white_rabbit: WhiteRabbitPunctuality,
+        jabberwocky: JabberwockyPresence,
+        queen_of_hearts: QueenOfHeartsMood,
+    ) {
+        if matches!(alice, AlicePresence::Present)
+            || matches!(mad_hatter, MadHatterSanity::Sane)
+            || matches!(white_rabbit, WhiteRabbitPunctuality::OnTime)
+        {
+            self.tea_party = TeaPartyStatus::TeaIsServed;
+        } else {
+            self.tea_party = TeaPartyStatus::TeaIsNotServed;
+        }
+        if matches!(jabberwocky, JabberwockyPresence::Present)
+            || matches!(queen_of_hearts, QueenOfHeartsMood::Angry)
+        {
+            self.danger = DangerLevel::RunForYourLife;
+        } else {
+            self.danger = DangerLevel::AsDangerousAsSleepingPuppies;
+        }
+    }
+}
+
+impl std::fmt::Display for Wonderland {
+    fn fmt(&amp;self, fmt: &amp;mut std::fmt::Formatter&lt;'_&gt;) -&gt; std::fmt::Result {
+        write!(
+            fmt,
+            "Wonderland: Tea Party: {}, Danger: {}",
+            if matches!(self.tea_party, TeaPartyStatus::TeaIsServed) {
+                "Tea is served"
+            } else {
+                "Please come again"
+            },
+            if matches!(self.danger, DangerLevel::RunForYourLife) {
+                "Run for your life"
+            } else {
+                "No need to worry!"
+            }
+        )
+    }
+}</code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="chapter-14-more-clippy-lints"><a class="header" href="#chapter-14-more-clippy-lints">Chapter 1.4: More Clippy lints</a></h1>
+<p>In this chapter, we're going to learn a bit more about Clippy - exploring the <a href="chapter_1/chapter_1_4.html#what-lints-are-enabled-by-default">available lints</a>, and exploring the <a href="chapter_1/chapter_1_4.html#im-scared-and-these-lints-are-why">current output</a> of our little program.</p>
+<p>If you already have a good handle on these, head over to <a href="chapter_1/./chapter_1_5.html">Chapter 1.5</a> to learn more about the many ways we deal with lint warnings.</p>
+<h2 id="but-wait-theres-more"><a class="header" href="#but-wait-theres-more">But wait, there's more!</a></h2>
+<p>There are a lot of lints included in both rust and Clippy by default.
+However, there are a bunch of super useful ones that are only available if you ask for them.</p>
+<p>The <a href="https://rust-lang.github.io/rust-clippy/master/index.html">full list of clippy lints</a> is really interesting to browse.</p>
+<p>To use that page to its fullest, near the top of the page there's a selector for which "Lint groups" you want to see.
+The intent behind each lint group is described <a href="https://doc.rust-lang.org/stable/clippy/lints.html">in the Clippy documentation</a>.</p>
+<h2 id="what-lints-are-enabled-by-default"><a class="header" href="#what-lints-are-enabled-by-default">What lints are enabled by default?</a></h2>
+<p>If you go back to the <a href="https://rust-lang.github.io/rust-clippy/master/index.html">full lint list</a>, you can modify the "Lint levels" selector.</p>
+<p>To see the default lints, you want to select just <a href="https://rust-lang.github.io/rust-clippy/master/index.html?levels=warn%2Cdeny"><code>warn</code> and <code>deny</code></a>.
+What a list!</p>
+<p>It is strongly recommended that you do not modify the default set of lints, or change them from <code>warn</code> or <code>deny</code> to <code>allow</code>.
+The core set of Clippy lints is there for a reason, and the community has more-or-less agreed that this is a good base set to use.</p>
+<h2 id="we-need-to-go-deeper"><a class="header" href="#we-need-to-go-deeper">We need to go deeper</a></h2>
+<p>But we can do better still.</p>
+<p>Let's take a look at which lints we could optionally choose to enable, by examining the "Lint levels" selector again.
+But this time, instead of choosing <code>warn</code> and <code>deny</code>, select just <a href="https://rust-lang.github.io/rust-clippy/master/index.html?levels=allow"><code>allow</code></a>.
+This means "show me the list of available lints, but just the ones that aren't set up to emit warnings or errors by default".</p>
+<p>Right away, you can see that the lint groups that show up in the big table (things like <code>restriction</code>, <code>pedantic</code>, and so on) have changed.</p>
+<p>What are these things?
+Well you can read for yourself what the purpose is behind the <a href="https://doc.rust-lang.org/stable/clippy/lints.html#pedantic"><code>pedantic</code></a>
+and <a href="https://doc.rust-lang.org/stable/clippy/lints.html#restriction"><code>restriction</code></a> groups are.</p>
+<p>In particular, we see that the <code>pedantic</code> group is used to provide "an in depth check of [your] code".</p>
+<p>Since this book is all about learning more intermediate lessons about Rust, it will be extremely valuable to turn on these lints, and see what
+new knowledge we can walk away with when we encounter these more <code>pedantic</code> lints.</p>
+<h2 id="running-in-pedantic-mode"><a class="header" href="#running-in-pedantic-mode">Running in pedantic mode</a></h2>
+<p>As it turns out, we already did this!
+In the <code>clippy</code> command we ran previously, we invoked it like this:</p>
+<pre><code class="language-bash">cargo clippy -- -W clippy::pedantic
+</code></pre>
+<p>The <code>-W clippy::pedantic</code> part tells Clippy to <code>W</code>arn us about anything in the <code>pedantic</code> group.</p>
+<p>Run this command again, with the same arguments, on the code we had before.</p>
+<h2 id="im-scared-and-these-lints-are-why"><a class="header" href="#im-scared-and-these-lints-are-why">I'm scared and these lints are why</a></h2>
+<p>You will probably see the following:</p>
+<pre><code class="language-bash">    Checking whimsy-bin v0.1.0 (/home/code/whimsy/whimsy-bin)
+warning: variant `Absent` is never constructed
+  --&gt; whimsy-bin/src/main.rs:33:5
+   |
+31 | enum AlicePresence {
+   |      ------------- variant in this enum
+32 |     Present,
+33 |     Absent,
+   |     ^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: variant `Insane` is never constructed
+  --&gt; whimsy-bin/src/main.rs:38:5
+   |
+36 | enum MadHatterSanity {
+   |      --------------- variant in this enum
+37 |     Sane,
+38 |     Insane,
+   |     ^^^^^^
+
+warning: variant `OnTime` is never constructed
+  --&gt; whimsy-bin/src/main.rs:42:5
+   |
+41 | enum WhiteRabbitPunctuality {
+   |      ---------------------- variant in this enum
+42 |     OnTime,
+   |     ^^^^^^
+
+warning: variant `Present` is never constructed
+  --&gt; whimsy-bin/src/main.rs:47:5
+   |
+46 | enum JabberwockyPresence {
+   |      ------------------- variant in this enum
+47 |     Present,
+   |     ^^^^^^^
+
+warning: variant `Angry` is never constructed
+  --&gt; whimsy-bin/src/main.rs:53:5
+   |
+51 | enum QueenOfHeartsMood {
+   |      ----------------- variant in this enum
+52 |     Happy,
+53 |     Angry,
+   |     ^^^^^
+
+warning: this argument is passed by value, but not consumed in the function body
+  --&gt; whimsy-bin/src/main.rs:59:16
+   |
+59 |         alice: AlicePresence,
+   |                ^^^^^^^^^^^^^ help: consider taking a reference instead: `&amp;AlicePresence`
+   |
+help: consider marking this type as `Copy`
+  --&gt; whimsy-bin/src/main.rs:31:1
+   |
+31 | enum AlicePresence {
+   | ^^^^^^^^^^^^^^^^^^
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_pass_by_value
+   = note: `-W clippy::needless-pass-by-value` implied by `-W clippy::pedantic`
+   = help: to override `-W clippy::pedantic` add `#[allow(clippy::needless_pass_by_value)]`
+
+warning: this argument is passed by value, but not consumed in the function body
+  --&gt; whimsy-bin/src/main.rs:60:21
+   |
+60 |         mad_hatter: MadHatterSanity,
+   |                     ^^^^^^^^^^^^^^^ help: consider taking a reference instead: `&amp;MadHatterSanity`
+   |
+help: consider marking this type as `Copy`
+  --&gt; whimsy-bin/src/main.rs:36:1
+   |
+36 | enum MadHatterSanity {
+   | ^^^^^^^^^^^^^^^^^^^^
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_pass_by_value
+
+warning: this argument is passed by value, but not consumed in the function body
+  --&gt; whimsy-bin/src/main.rs:61:23
+   |
+61 |         white_rabbit: WhiteRabbitPunctuality,
+   |                       ^^^^^^^^^^^^^^^^^^^^^^ help: consider taking a reference instead: `&amp;WhiteRabbitPunctuality`
+   |
+help: consider marking this type as `Copy`
+  --&gt; whimsy-bin/src/main.rs:41:1
+   |
+41 | enum WhiteRabbitPunctuality {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_pass_by_value
+
+warning: this argument is passed by value, but not consumed in the function body
+  --&gt; whimsy-bin/src/main.rs:62:22
+   |
+62 |         jabberwocky: JabberwockyPresence,
+   |                      ^^^^^^^^^^^^^^^^^^^ help: consider taking a reference instead: `&amp;JabberwockyPresence`
+   |
+help: consider marking this type as `Copy`
+  --&gt; whimsy-bin/src/main.rs:46:1
+   |
+46 | enum JabberwockyPresence {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_pass_by_value
+
+warning: this argument is passed by value, but not consumed in the function body
+  --&gt; whimsy-bin/src/main.rs:63:26
+   |
+63 |         queen_of_hearts: QueenOfHeartsMood,
+   |                          ^^^^^^^^^^^^^^^^^ help: consider taking a reference instead: `&amp;QueenOfHeartsMood`
+   |
+help: consider marking this type as `Copy`
+  --&gt; whimsy-bin/src/main.rs:51:1
+   |
+51 | enum QueenOfHeartsMood {
+   | ^^^^^^^^^^^^^^^^^^^^^^
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_pass_by_value
+
+warning: `whimsy-bin` (bin "whimsy-bin") generated 10 warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.09s
+</code></pre>
+<p>What a beast!</p>
+<p>But there's some really useful information in here.
+Let's take a look at one of the warnings we got back.</p>
+<h2 id="example-warning-variant-absent-is-never-constructed"><a class="header" href="#example-warning-variant-absent-is-never-constructed">Example: <code>warning: variant `Absent` is never constructed</code></a></h2>
+<p>This warning, and the others that apply to the other enums, is telling us that our code is not using this variant.</p>
+<p>While it may be obvious in this simple example, this warning can be really interesting to see in a larger codebase.</p>
+<p>Let's say you perform a refactor of some part of your code, and you are suddenly greeted with this warning on one of your enums.
+You know instantly that no code is using this variant.
+And that means that one of the following is likely the case:</p>
+<ul>
+<li>the variant is no longer needed</li>
+<li>you messed up in your refactor and forgot a code path somewhere</li>
+<li>you forgot to make the enum public in a library crate
+<ul>
+<li>(You will not see this error for public enums in libraries - because the compiler has no way to know if the users of your library will ever use it!)</li>
+</ul>
+</li>
+</ul>
+<p>All in all, this is an extremely helpful warning, and it immediately sets off our spidey-sense that we may have to do some thinking, and convince ourselves why the variant is no longer used.</p>
+<p>In our case, for this simple toy project, we have two, no, three! options:</p>
+<ul>
+<li>Remove the variant</li>
+<li>Add some code that uses the variant</li>
+<li>Use Clippy's macro tools to avoid spitting out the warning</li>
+</ul>
+<p>As you can imagine, we're going to do the latter.
+Again, in a real project, you'll want to actually use your best judgment on how to proceed, depending on the specific warning/error and the context where it is happening in your code.
+But in this book, we say:</p>
+<div id="admonition-quote" class="admonition admonish-quote" role="note" aria-labelledby="admonition-quote-title">
+<div class="admonition-title">
+<div id="admonition-quote-title">
+<p>Quote</p>
+</div>
+<a class="admonition-anchor-link" href="chapter_1/chapter_1_4.html#admonition-quote"></a>
+</div>
+<div>
+<p>Judgment schmudgment.</p>
+<ul>
+<li><em>Us, 2024, haughtily</em></li>
+</ul>
+</div>
+</div>
+<p>Let's take a look in the <a href="chapter_1/./chapter_1_5.html">next chapter</a> how we can address these warnings.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="chapter-15-taming-clippy"><a class="header" href="#chapter-15-taming-clippy">Chapter 1.5: Taming Clippy</a></h1>
+<p>In this chapter, we're going to take a deep dive into <a href="chapter_1/chapter_1_5.html#available-clippy-attributes">lint levels</a>, <a href="chapter_1/chapter_1_5.html#how-to-use-them">lint attributes</a>, and <a href="chapter_1/chapter_1_5.html#when-you-have-a-hammer-everything-looks-like-a-nail">outer lint attributes</a>. If you're well versed in these topics, hop on over to <a href="chapter_1/./chapter_1_6.html">Chapter 1.6</a> to learn more about workspace best practices.</p>
+<h2 id="i-got-99-problems-and-pedantic-mode-is-98-of-them"><a class="header" href="#i-got-99-problems-and-pedantic-mode-is-98-of-them">I got 99 problems, and pedantic mode is 98 of them</a></h2>
+<p>When you start using lints from Clippy's <code>pedantic</code> and <code>restrition</code> lints, you'll invariably get some false positives.
+That is, the lint triggers and a warning is issued, but you're okay with it.
+You're a complex, sensitive, misunderstood soul - but sometimes you just want to tell Clippy to shut up.</p>
+<h2 id="available-clippy-attributes"><a class="header" href="#available-clippy-attributes">Available Clippy attributes</a></h2>
+<p>When you're learning Rust, you probably encountered an <a href="https://doc.rust-lang.org/reference/procedural-macros.html#attribute-macros"><code>attribute</code></a> macro before.</p>
+<p>Yes, that's right, those little things like <code>#[derive(Debug)]</code> or <code>#[test]</code> are really <a href="https://doc.rust-lang.org/reference/procedural-macros.html">procedural macros</a> under the hood.</p>
+<p>We'll get more into macros and how we can <del>abuse</del> use them later in the book, but for now, the important thing to know is that Rust provides several macros to modify <a href="https://doc.rust-lang.org/reference/attributes/diagnostics.html">how it warns you about lints</a>.</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>purpose</th><th>example</th></tr></thead><tbody>
+<tr><td><a href="https://doc.rust-lang.org/rustc/lints/levels.html#allow">allow</a></td><td>prevents warnings or errors from being emitted</td><td><code>#[allow(clippy::float_cmp)]</code> surpresses Clippy telling you about directly comparing <code>f32</code> or <code>f64</code> values using <code>==</code></td></tr>
+<tr><td><a href="https://doc.rust-lang.org/rustc/lints/levels.html#expect">expect</a></td><td>prevents warnings or errors from being emitted, as long as that warning or error actually occurs</td><td><code>#[expect(clippy::float_cmp)]</code> surpresses the warning for float comparisons, or will throw an error if no such comparison was found</td></tr>
+<tr><td><a href="https://doc.rust-lang.org/rustc/lints/levels.html#warn">warn</a></td><td>creates a warning (does not prevent successful compilation) for the lint</td><td><code>#[warn(clippy::float_cmp)]</code> emits a compilation warning when a direct float comparison is encountered</td></tr>
+<tr><td><a href="https://doc.rust-lang.org/rustc/lints/levels.html#force-warn">force-warn</a></td><td>Like <code>warn</code>, but cannot be overridden - either to allow or deny</td><td></td></tr>
+<tr><td><a href="https://doc.rust-lang.org/rustc/lints/levels.html#deny">deny</a></td><td>creates an error (DOES prevent successful compilation) for the lint</td><td><code>#[deny(clippy::float_cmp)]</code> emits a compilation error when a direct float comparison is encountered</td></tr>
+<tr><td><a href="https://doc.rust-lang.org/rustc/lints/levels.html#forbid">forbid</a></td><td>creates an error for the lint, and cannot be surpressed by another Clippy attribute</td><td><code>#[forbid(clippy::float_cmp)]</code> emits a compilation error when a direct float comparison is encountered, even if you tried to slap a <code>#[allow(clippy::float_cmp)]</code> on the offending code (or tried to downgrade or <code>warn</code> or <code>deny</code> even)</td></tr>
+</tbody></table>
+</div>
+<h2 id="how-to-use-them"><a class="header" href="#how-to-use-them">How to use them</a></h2>
+<p>Let's take the example we just saw, with Clippy telling us that the <code>Absent</code> variant was never constructed.
+How do we tell Clippy that we're cool with this?</p>
+<p>By far the simplest way is to drop an <code>allow</code> attribute on the statement or block containing the warning.
+This might look like:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum AlicePresence {
+    Present,
+    #[allow(dead_code)]
+    Absent,
+}
+<span class="boring">}</span></code></pre></pre>
+<p>There are a couple interesting things to note here.
+First, this is not a Clippy lint.
+You can tell by the lack of a <code>clippy::</code> prefix.
+So this is just a normal warning that <code>cargo check</code> would emit as well.
+Neat!</p>
+<p>Second, we placed it directly above the enum variant that was emitting the warning.
+We could have placed the attribute on the enum itself - but that would hide any other unused variants we might add later, without us having the chance to consider what to do about that new warning.</p>
+<p>This is basically using the finest scalpel we have - we are performing minimally invasive surgery.
+We are supressing the lint warning <em>exactly</em> where it is occuring.</p>
+<h2 id="best-practices-1"><a class="header" href="#best-practices-1">Best practices</a></h2>
+<p>This does work!
+If you were to run <code>cargo clipy -- -W clippy::pedantic</code>, this specific warning is now gone.
+We still have all the other ones, but at least <em>this</em> one is handled.</p>
+<p>But there's a big issue here.</p>
+<p>Let's say in the future, we start using the <code>Absent</code> variant.
+We go on our merry way, oblivious to the trap we're about to fall into.</p>
+<p>One day, our friend the Caterpillar decides to refactor some of our code.
+And once again, they find themself in the position where the <code>Absent</code> variant is no longer used.</p>
+<p>But no warning gets emitted!
+And the poor Caterpillar never gets the chance to reason about why this happened - a bad refactor, the variant no longer being needed, or whatever.</p>
+<p>This is because the <code>allow</code> attribute had been sitting on the variant this whole time.
+But there is a solution.</p>
+<p>What if we did this instead:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum AlicePresence {
+    Present,
+    #[expect(dead_code)]
+    Absent,
+}
+<span class="boring">}</span></code></pre></pre>
+<p>We have again accomplished our present-term goal: not worrying about the fact that the <code>Absent</code> variant isn't used yet.</p>
+<p>But now, the very next bit of code that introduces a usage of the <code>Absent</code> variant will be presented with a warning!</p>
+<pre><code class="language-bash">warning: this lint expectation is unfulfilled
+  --&gt; whimsy-bin/src/main.rs:35:14
+   |
+35 |     #[expect(dead_code)]
+   |              ^^^^^^^^^
+   |
+   = note: `#[warn(unfulfilled_lint_expectations)]` on by default
+</code></pre>
+<p>As soon as we actually use <code>Absent</code>, Clippy is right there to tell us that we should probably remove this <code>expect</code>, since the variant is now in use.</p>
+<p>So the moral of the story is:</p>
+<div id="admonition-tip" class="admonition admonish-tip" role="note" aria-labelledby="admonition-tip-title">
+<div class="admonition-title">
+<div id="admonition-tip-title">
+<p>Tip</p>
+</div>
+<a class="admonition-anchor-link" href="chapter_1/chapter_1_5.html#admonition-tip"></a>
+</div>
+<div>
+<p>When supressing lint warnings, prefer <code>expect</code> over <code>allow</code>.</p>
+</div>
+</div>
+<h2 id="when-you-have-a-hammer-everything-looks-like-a-nail"><a class="header" href="#when-you-have-a-hammer-everything-looks-like-a-nail">When you have a hammer, everything looks like a nail</a></h2>
+<p>But there is another way to do the same job.
+It's less of a minimally invasive surgery, and more of a fascist dictator banning the use of the word "obsequious" nation-wide.</p>
+<p>And that is the <a href="https://doc.rust-lang.org/rust-by-example/attribute.html">outer attribute</a> style of lint suppression.</p>
+<p>In this case, at the start of an item (often an entire file, but sometimes a code block or a mod definition), you write the following:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span>#![expect(dead_code)]
+<span class="boring">fn main() {
+</span><span class="boring">}</span></code></pre></pre>
+<p>If we were to do this at file level, it would come before all our <code>use</code> and <code>mod</code> bits, before <code>main</code>, basically before everything.
+(You can put it after comments, like doc comments for instance, which we'll get to shortly.)</p>
+<p>In this case, the extra <code>!</code> after the <code>#</code> tells rust that instead of applying this attribute to the <em>next</em> thing it sees,
+we want to apply this attribute to <em>whatever item contains this attribute</em>.</p>
+<p>So in this case, we want to apply this particular attribute to the entire <code>main.rs</code> file.</p>
+<p>This is a blunt tool indeed - we won't see <em>any</em> instances of this warning whenever it comes up under <code>main.rs</code>.
+This includes in places we might not expect, like things included via <code>mod</code> statements - so be super careful with this one.
+It often has a tendancy to be too broad.
+Try and find the minimal scope to apply your attribute that finds a balance between:</p>
+<ul>
+<li>Supressing the warnings you are immediately addressing, and</li>
+<li>Not sacrificing readability by having individual item level supressions for the same lint</li>
+</ul>
+<p>I find I rarely need to use outer attributes to suppress warnings, but I do use them a lot to turn warnings on that we may not want being applied globally.
+We'll come across a good use of this when we write our CUDA kernels, since we <em>really</em> don't want those kernels to panic.
+And Rust has a nasty habit of hiding secret panics behind really innocent looking things, like addition or array indexing.</p>
+<p>But that's for later!
+For now, let's try finding a good use case for the outer attribute style of lint suppression.</p>
+<h2 id="moving-wonderland-to-a-mod"><a class="header" href="#moving-wonderland-to-a-mod">Moving Wonderland to a mod</a></h2>
+<p>Let's try moving everything related to Wonderland into its own mod.
+This is pretty simple - we can just wrap everything except <code>main</code> in a <code>mod</code> block:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// Wonderland module
+mod wonderland {
+    #![expect(dead_code)]
+
+    pub enum TeaPartyStatus {
+        TeaIsServed,
+        TeaIsNotServed,
+    }
+
+    pub enum DangerLevel {
+        AsDangerousAsSleepingPuppies,
+        RunForYourLife,
+    }
+
+    pub struct Wonderland {
+        pub tea_party: TeaPartyStatus,
+        pub danger: DangerLevel,
+    }
+
+    pub enum AlicePresence {
+        Present,
+        Absent,
+    }
+
+    pub enum MadHatterSanity {
+        Sane,
+        Insane,
+    }
+
+    pub enum WhiteRabbitPunctuality {
+        OnTime,
+        VeryVeryLate,
+    }
+
+    pub enum JabberwockyPresence {
+        Present,
+        Absent,
+    }
+
+    pub enum QueenOfHeartsMood {
+        Happy,
+        Angry,
+    }
+
+    impl Wonderland {
+        pub fn assess_surroundings(
+            &amp;mut self,
+            alice: AlicePresence,
+            mad_hatter: MadHatterSanity,
+            white_rabbit: WhiteRabbitPunctuality,
+            jabberwocky: JabberwockyPresence,
+            queen_of_hearts: QueenOfHeartsMood,
+        ) {
+            if matches!(alice, AlicePresence::Present)
+                || matches!(mad_hatter, MadHatterSanity::Sane)
+                || matches!(white_rabbit, WhiteRabbitPunctuality::OnTime)
+            {
+                self.tea_party = TeaPartyStatus::TeaIsServed;
+            } else {
+                self.tea_party = TeaPartyStatus::TeaIsNotServed;
+            }
+            if matches!(jabberwocky, JabberwockyPresence::Present)
+                || matches!(queen_of_hearts, QueenOfHeartsMood::Angry)
+            {
+                self.danger = DangerLevel::RunForYourLife;
+            } else {
+                self.danger = DangerLevel::AsDangerousAsSleepingPuppies;
+            }
+        }
+    }
+
+    impl std::fmt::Display for Wonderland {
+        fn fmt(&amp;self, fmt: &amp;mut std::fmt::Formatter&lt;'_&gt;) -&gt; std::fmt::Result {
+            write!(
+                fmt,
+                "Wonderland: Tea Party: {}, Danger: {}",
+                if matches!(self.tea_party, TeaPartyStatus::TeaIsServed) {
+                    "Tea is served"
+                } else {
+                    "Please come again"
+                },
+                if matches!(self.danger, DangerLevel::RunForYourLife) {
+                    "Run for your life"
+                } else {
+                    "No need to worry!"
+                }
+            )
+        }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Pay particular attention to the first line inside the <code>mod</code> definition: that's our outer attribute.</p>
+<p>We now need to update <code>main</code> so it knows how to find things:</p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let mut wonderland = wonderland::Wonderland {
+        tea_party: wonderland::TeaPartyStatus::TeaIsNotServed,
+        danger: wonderland::DangerLevel::AsDangerousAsSleepingPuppies,
+    };
+    wonderland.assess_surroundings(
+        wonderland::AlicePresence::Absent,
+        wonderland::MadHatterSanity::Sane,
+        wonderland::WhiteRabbitPunctuality::VeryVeryLate,
+        wonderland::JabberwockyPresence::Absent,
+        wonderland::QueenOfHeartsMood::Happy,
+    );
+    println!("{wonderland}");
+}</code></pre></pre>
+<p>We can compile the program successfully, and running gives the right output.</p>
+<p>But note that we have surpressed the <code>dead_code</code> warning for the <em>entire</em> <code>Wonderland</code> mod.
+Any future code we add to the module, that would normally trigger this warning, will be silenced.</p>
+<p>But also note that when we do end up using all the variants, the <code>expect</code> attribute would then fire a warning telling us that
+there is no more dead code in the module! We would then simply remove the attribute, and life would be back to normal.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="chapter-16-package-and-workspace-best-practices"><a class="header" href="#chapter-16-package-and-workspace-best-practices">Chapter 1.6: Package and Workspace best practices</a></h1>
+<p>In this chapter, we're going to learn about <a href="chapter_1/chapter_1_6.html#crate-level-docs">crate documentation</a>, configuring <a href="chapter_1/chapter_1_6.html#configuring-lints-on-a-workspace-level">lint levels in our workspace</a>, the <a href="chapter_1/chapter_1_6.html#the-warnings">pitfalls</a> of the <code>restriction</code> group,
+and I'll suggest a <a href="chapter_1/chapter_1_6.html#choosing-a-good-subset-of-lints-to-enable">workspace lint setup</a> that strikes a balance between pedanticness and ergonomics that works for me at least.</p>
+<h2 id="going-back-to-basics"><a class="header" href="#going-back-to-basics">Going back to basics</a></h2>
+<p>Ok, let's take a quick step back.
+Because there's some really interesting info we can get from even the default new <code>cargo</code> project.</p>
+<h2 id="hello-world-again"><a class="header" href="#hello-world-again">Hello, world, again</a></h2>
+<p>Let's go back to our original "hello world" style <code>main</code> function.
+Remove all the code from <code>whimsy-bin/src/main.rs</code>, and replace it with this:</p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    println!("Hello, world!");
+}</code></pre></pre>
+<p>You should also remove the dependency on <code>rand</code> in both the workspace (<code>./Cargo.toml</code>) and the package (<code>whimsy-bin/Cargo.toml</code>).
+This is as simple as removing the line referring to <code>rand</code> in the dependencies section of each file.</p>
+<h2 id="checking-our-code-with-clippy-pedantic"><a class="header" href="#checking-our-code-with-clippy-pedantic">Checking our code with Clippy pedantic</a></h2>
+<p>You can compile and run this program just fine.
+You can even get clean results back from both <code>cargo check</code> and even <code>cargo clippy -- -W clippy::pedantic</code>.</p>
+<p>So what could we possibly improve about this setup?
+This is basically the simplest possible workspace setup you could have.</p>
+<h3 id="more-lints"><a class="header" href="#more-lints">More lints</a></h3>
+<p>Well, yes, this is the <em>simplest</em> possible workspace.
+But it's by no means the most <em>complete</em> from a best practices point of view.</p>
+<p>Try running the following:</p>
+<pre><code class="language-bash">cargo clippy -- -W missing_docs
+</code></pre>
+<p>You'll get results similar to this:</p>
+<pre><code class="language-bash">    Checking whimsy-bin v0.1.0 (/home/code/whimsy/whimsy-bin)
+warning: missing documentation for the crate
+ --&gt; whimsy-bin/src/main.rs:1:1
+  |
+1 | / fn main() {
+2 | |     println!("Hello, world!");
+3 | | }
+  | |_^
+  |
+  = note: requested on the command line with `-W missing-docs`
+
+warning: `whimsy-bin` (bin "whimsy-bin") generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.03s
+</code></pre>
+<p>Ok, fair enough.
+We're missing crate level documentation.
+In our case, the crate root is <code>whimsy-bin/src/main.rs</code>, so it seems like a good place to put some.</p>
+<h3 id="crate-level-docs"><a class="header" href="#crate-level-docs">Crate level docs</a></h3>
+<p>Remember how we were able to create outer attributes, by putting a <code>!</code> after the initial <code>#</code>?</p>
+<p>And remember how this meant that the attribute applied to the entire item the attribute was declared in?</p>
+<p>Well something very similar happens with docs.
+But in this case, we put the <code>!</code> after the <code>//</code> comment signifier.</p>
+<p>Add the comments in the following snippet to your <code>main.rs</code>:</p>
+<pre><pre class="playground"><code class="language-rust">//! whimsy-bin
+//!
+//! This program exists solely for the amusement, entertainment, and education of the programmer.
+//! In that sense, it's very much like a childrens book, perhaps about a young lass daydreaming about a strange and wonderful land.
+
+/// The main entry point of our whimsical adventure
+fn main() {
+    println!("Hello, world!");
+}
+</code></pre></pre>
+<p>Note that we are using <code>//!</code> here for the first comment section.
+This is an "outer" comment basically. It applies the comment to the entire crate, instead of just this file.</p>
+<p>This is in contrast to the <code>///</code> style comment we have put on our <code>main</code> function.
+This is an "inner" comment, meaning that this comment applies only to the <code>main</code> function, and not the crate as a whole.</p>
+<div id="admonition-viewing-doc-comments" class="admonition admonish-tip" role="note" aria-labelledby="admonition-viewing-doc-comments-title">
+<div class="admonition-title">
+<div id="admonition-viewing-doc-comments-title">
+<p>Viewing doc comments</p>
+</div>
+<a class="admonition-anchor-link" href="chapter_1/chapter_1_6.html#admonition-viewing-doc-comments"></a>
+</div>
+<div>
+<p>These triple-slash comments are part of Rust's "doc comment" system.
+There's a lot to say about Rust's documentation system, but for our purposes, just note that it's robust enough to create
+all the documentation you're used to seeing when you check out a new crate on <code>crates.io</code> or <code>docs.rs</code></p>
+</div>
+</div>
+<h4 id="real-world-example"><a class="header" href="#real-world-example">Real world example</a></h4>
+<p>Let's take a quick peek at one very common crate, called <code>serde</code>.
+We'll be using this crate later in the book, but right now it doesn't matter what it <em>does</em>, only what it's comments look like.</p>
+<p>Check out the <a href="https://docs.rs/serde/latest/serde/"><code>serde docs</code></a> at <code>docs.rs</code>.
+Pretty nice, huh?</p>
+<p>Well, these were generated automatically from the doc comments provided by the crate authors.</p>
+<p>Near the top of the page, just under the "Crate serde" comment, click on the <a href="https://docs.rs/serde/latest/src/serde/lib.rs.html#1-348">Source</a> link.
+You'll be taken to a copy of the code for the latest version of the crate.
+You should see something that starts like this:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>//! # Serde
+//!
+//! Serde is a framework for ***ser***ializing and ***de***serializing Rust data
+//! structures efficiently and generically.
+<span class="boring">}</span></code></pre></pre>
+<p>See how that's exactly what displays on the main docs page?
+Very cool!</p>
+<p>The takeaway is that if you are planning on releasing your crate to the world, or even having a larger team of contributors,
+it may be worth your time to set a convention of using doc comments.
+You can then build your documentation directly from the source tree you're working on, even if it's a completely local branch of the code.</p>
+<p>And how do you help enforce this convention?
+By using the <code>missing_docs</code> lint, of course!</p>
+<h2 id="configuring-lints-on-a-workspace-level"><a class="header" href="#configuring-lints-on-a-workspace-level">Configuring lints on a workspace level</a></h2>
+<p>Fortunately, we can set up our project to the <code>missing_docs</code> lint whenever we run <code>cargo check</code>.</p>
+<p>In your workspace <code>Cargo.toml</code>, add the following:</p>
+<pre><code class="language-toml">[workspace.lints.rust]
+missing_docs = "warn"
+</code></pre>
+<p>Then, in our package configuration, in <code>whimsy-bin/Cargo.toml</code>, we can just ask for whatever lints are configured at the workspace level:</p>
+<pre><code class="language-toml">[lints]
+workspace = true
+</code></pre>
+<p>Now, whenever we run <code>cargo check</code>, we will have the <code>missing_docs</code> lint warning us when we are being lazy (or just forgetful).</p>
+<h3 id="clippy-specific-lints"><a class="header" href="#clippy-specific-lints">Clippy specific lints</a></h3>
+<p>Ok, this works great for built-in Rust lints.
+What about clippy lints?</p>
+<p>The mechanism is pretty similar.
+In your workspace <code>Cargo.toml</code>, add the following:</p>
+<pre><code class="language-toml">[workspace.lints.clippy]
+pedantic = "warn"
+restriction = "warn"
+</code></pre>
+<p>Ok, let's give it a spin.
+Try running <code>cargo clippy</code> with no other options.</p>
+<p>You'll probably see the following:</p>
+<pre><code class="language-bash">    Checking whimsy-bin v0.1.0 (/home/code/whimsy/whimsy-bin)
+warning: `clippy::restriction` is not meant to be enabled as a group
+  |
+  = note: because of the command line `--warn clippy::restriction`
+  = help: enable the restriction lints you need individually
+  = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#blanket_clippy_restriction_lints
+  = note: `#[warn(clippy::blanket_clippy_restriction_lints)]` on by default
+
+warning: use of `println!`
+ --&gt; whimsy-bin/src/main.rs:7:5
+  |
+7 |     println!("Hello, world!");
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#print_stdout
+  = note: `-W clippy::print-stdout` implied by `-W clippy::restriction`
+  = help: to override `-W clippy::restriction` add `#[allow(clippy::print_stdout)]`
+
+warning: `whimsy-bin` (bin "whimsy-bin") generated 2 warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s
+</code></pre>
+<p>Yikes!
+I certainly didn't expect to get <em>two</em> warnings from a simple hello world program!
+What's going on?</p>
+<h3 id="the-warnings"><a class="header" href="#the-warnings">The warnings</a></h3>
+<p>Fortunately, the first warning tells us right away what's going on.
+The <code>restriction</code> lint group isn't really meant to be enabled in full.
+That's because these are lints that are intended to be specifically enabled in a given project, based on that project's needs.</p>
+<p>In fact, there are lints in the restriction group that expressly contradict each other:</p>
+<ul>
+<li><code>restriction::semicolon_inside_block</code> will warn you if you write something like <code>unsafe { f(x) };</code></li>
+<li><code>restriction::semicolon_outside_block</code> will warn you if you write something like <code>unsafe { f(x); }</code></li>
+</ul>
+<p>And to boot, each will tell you to use the style of the other!</p>
+<p>As it turns out, it's intended that you only use <em>one</em> of these two.
+They are considered mutually exclusive.
+And they're there to simply enforce a coding standard.</p>
+<p>So you can see, the <code>restriction</code> group really should not be enabled as a whole.</p>
+<h3 id="the-println-warning"><a class="header" href="#the-println-warning">The <code>println</code> warning</a></h3>
+<p>In this case, the second warning is a slightly more interesting one.
+This is notifying us that we're committing the cardinal sin of using <code>println!</code>.</p>
+<p>Ok, ok - if we <a href="https://rust-lang.github.io/rust-clippy/master/index.html#print_stdout">follow the link</a> for that specific lint, we can see the reasoning.
+It is true that you generally don't want to leave debugging statements in your code.</p>
+<p>So both of these warnings make sense. Now the question is what to do about them.</p>
+<h2 id="choosing-a-good-subset-of-lints-to-enable"><a class="header" href="#choosing-a-good-subset-of-lints-to-enable">Choosing a good subset of lints to enable</a></h2>
+<p>The short answer for me is usually:</p>
+<ul>
+<li>Turn on everything in <code>pedantic</code> as a warning</li>
+<li>Enable only those lints in <code>restriction</code> that I believe make sense for general programming</li>
+</ul>
+<p>This is a super subjective decision.
+Every programmer is going to have a "pedanticness" level that they're comfortable with.
+In fact, every project is probably going to have a level that's appropriate, and it can vary quite a bit.</p>
+<p>But we're not just every programmer.
+We want to be treated bad.
+We want to be whipped.
+Chained.
+And we want to call Clippy "master".</p>
+<p>Ok, that might be a bit hyperbolic, but I do tend to run with more lints than most.
+You can often run into false positives, but I like to see these lints when they show up, because:</p>
+<ul>
+<li>Many of them have decent reasoning behind them, which I can learn from (both Rust specific, and general programming practices)</li>
+<li>Solving the issue can also introduce you to new techniques, even from the suggested resolutions in the warning output</li>
+<li>It keeps me following good code hygiene and best practices</li>
+</ul>
+<p>So check out the list of <a href="https://doc.rust-lang.org/rustc/lints/listing/allowed-by-default.html">allowed-by-default</a> rustc lints,
+as well as the Clippy info we went over before.
+See if you can come up with a collection that works for you.</p>
+<p>As a good starting point, here's the configuration for Clippy lints that I generally use:</p>
+<pre><code class="language-toml">[workspace.lints.rust]
+# lint groups to enable
+deprecated_safe = "warn"
+future_incompatible = "warn"
+keyword_idents = "warn"
+let_underscore = "warn"
+nonstandard-style = "warn"
+rust_2018_idioms = "warn"
+rust_2024_compatibility = "warn"
+unused = "warn"
+# specific lints to enable
+ambiguous_negative_literals = "warn"
+ffi_unwind_calls = "warn"
+# fuzzy_provenance_casts = "warn" # requires `#![feature(strict_provenance)]`
+# lossy_provenance_casts = "warn" # requires `#![feature(strict_provenance)]`
+macro_use_extern_crate = "warn"
+meta_variable_misuse = "warn"
+missing_abi = "warn"
+missing_copy_implementations = "warn"
+missing_debug_implementations = "warn"
+missing_docs = "warn"
+# must_not_suspend = "warn" # requires `#![feature(must_not_suspend)]`
+non_ascii_idents = "warn"
+# non_exhaustive_omitted_patterns = "warn" # requires `#![feature(non_exhaustive_omitted_patterns_lint)]`
+non_local_definitions = "warn"
+overflowing_literals = "warn"
+patterns_in_fns_without_body = "warn"
+redundant_imports = "warn"
+redundant_lifetimes = "warn"
+# rust_2024_incompatible_pat = "warn" # requires `#![feature(ref_pat_eat_one_layer_2024)]`
+single_use_lifetimes = "warn"
+trivial_casts = "warn"
+trivial_numeric_casts = "warn"
+unit_bindings = "warn"
+unnameable_types = "warn"
+unreachable_pub = "warn"
+unsafe_code = "warn"
+unstable_features = "warn"
+unused_crate_dependencies = "warn"
+unused_import_braces = "warn"
+unused_lifetimes = "warn"
+unused_qualifications = "warn"
+unused_results = "warn"
+variant_size_differences = "warn"
+
+[workspace.lints.clippy]
+# lint groups to enable
+pedantic = "warn"
+nursery = "warn"
+cargo = "warn"
+# specific lints to enable
+absolute_paths = "warn"
+alloc_instead_of_core = "warn"
+allow_attributes = "warn"
+arbitrary_source_item_ordering = "warn"       # requires Rust 1.82
+arithmetic_side_effects = "warn"
+as_underscore = "warn"
+assertions_on_result_states = "warn"
+cfg_not_test = "warn"
+clone_on_ref_ptr = "warn"
+create_dir = "warn"
+decimal_literal_representation = "warn"
+default_numeric_fallback = "warn"
+else_if_without_else = "warn"
+empty_drop = "warn"
+empty_enum_variants_with_brackets = "warn"
+empty_structs_with_brackets = "warn"
+error_impl_error = "warn"
+exit = "warn"
+expect_used = "warn"
+filetype_is_file = "warn"
+float_cmp_const = "warn"
+fn_to_numeric_cast_any = "warn"
+format_push_string = "warn"
+if_then_some_else_none = "warn"
+impl_trait_in_params = "warn"
+indexing_slicing = "warn"
+infinite_loop = "warn"
+integer_division = "warn"
+iter_over_hash_type = "warn"
+large_include_file = "warn"
+let_underscore_must_use = "warn"
+let_underscore_untyped = "warn"
+lossy_float_literal = "warn"
+map_err_ignore = "warn"
+map_with_unused_argument_over_ranges = "warn" # requires Rust 1.84
+min_ident_chars = "warn"
+missing_assert_message = "warn"
+missing_asserts_for_indexing = "warn"
+missing_docs_in_private_items = "warn"
+mixed_read_write_in_expression = "warn"
+mod_module_files = "warn"
+module_name_repetitions = "warn"
+multiple_crate_versions = "warn"
+multiple_inherent_impl = "warn"
+multiple_unsafe_ops_per_block = "warn"
+mutex_atomic = "warn"
+needless_raw_strings = "warn"
+non_zero_suggestions = "warn"                 # requires Rust 1.81
+panic = "warn"
+panic_in_result_fn = "warn"
+partial_pub_fields = "warn"
+pathbuf_init_then_push = "warn"
+pattern_type_mismatch = "warn"
+pub_without_shorthand = "warn"
+rc_buffer = "warn"
+rc_mutex = "warn"
+redundant_type_annotations = "warn"
+ref_patterns = "warn"
+renamed_function_params = "warn"
+rest_pat_in_fully_bound_structs = "warn"
+same_name_method = "warn"
+single_char_lifetime_names = "warn"
+std_instead_of_alloc = "warn"
+std_instead_of_core = "warn"
+str_to_string = "warn"
+string_add = "warn"
+string_slice = "warn"
+string_to_string = "warn"
+suspicious_xor_used_as_pow = "warn"
+tests_outside_test_module = "warn"
+todo = "warn"
+try_err = "warn"
+undocumented_unsafe_blocks = "warn"
+unimplemented = "warn"
+unnecessary_safety_comment = "warn"
+unnecessary_safety_doc = "warn"
+unnecessary_self_imports = "warn"
+unneeded_field_pattern = "warn"
+unseparated_literal_suffix = "warn"
+unused_result_ok = "warn"
+unused_trait_names = "warn"                   # requires Rust 1.83
+unwrap_in_result = "warn"
+unwrap_used = "warn"
+verbose_file_reads = "warn"
+</code></pre>
+<p>This is a big list, and you don't need to understand every individual lint.
+Far better is to run with a list like this, then dig into each warning as it comes up, so you understand why it's there and what it's warning you about.</p>
+<p>You are free to modify this list however you like.
+Check out the link explanation on any that you don't understand from the name only, to see if you might like to keep it.</p>
+<p>At any rate, I'll use this for the remainder of this book.</p>
+<p>Add the above to your workspace's <code>Cargo.toml</code>, and then make sure you have your project-specific <code>Cargo.toml</code> set up to use the workspace settings.</p>
+<h2 id="applying-our-new-lints"><a class="header" href="#applying-our-new-lints">Applying our new lints</a></h2>
+<p>So now we've added some more checks, let's see what happens!
+Run the following:</p>
+<pre><code class="language-bash">cargo clippy
+</code></pre>
+<p>Note that we did not supply any extra parameters for extra lints here - Clippy is grabbing them from the package configuration that we just set.</p>
+<p>You'll probably see something like the following:</p>
+<pre><code class="language-bash">    Checking whimsy-bin v0.1.0 (/home/code/whimsy/whimsy-bin)
+warning: package `whimsy-bin` is missing `package.description` metadata
+  |
+  = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#cargo_common_metadata
+  = note: `-W clippy::cargo-common-metadata` implied by `-W clippy::cargo`
+  = help: to override `-W clippy::cargo` add `#[allow(clippy::cargo_common_metadata)]`
+
+warning: package `whimsy-bin` is missing `either package.license or package.license_file` metadata
+  |
+  = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#cargo_common_metadata
+
+warning: package `whimsy-bin` is missing `package.repository` metadata
+  |
+  = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#cargo_common_metadata
+
+warning: package `whimsy-bin` is missing `package.readme` metadata
+  |
+  = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#cargo_common_metadata
+
+warning: package `whimsy-bin` is missing `package.keywords` metadata
+  |
+  = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#cargo_common_metadata
+
+warning: package `whimsy-bin` is missing `package.categories` metadata
+  |
+  = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#cargo_common_metadata
+
+warning: `whimsy-bin` (bin "whimsy-bin") generated 6 warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.08s
+</code></pre>
+<p>Ok, this is interesting! We see that this entire set of warnings is coming from the <code>clippy::cargo</code> lint group.</p>
+<p>What these are telling us is that we haven't configured our workspace or packages to best practices yet.
+This is <em>exactly</em> the kind of lint I like to see!</p>
+<h3 id="package-metadata"><a class="header" href="#package-metadata">Package metadata</a></h3>
+<p>If you look at <code>whimsy-bin/Cargo.toml</code> at the moment, it probably looks like this:</p>
+<pre><code class="language-toml">[package]
+name = "whimsy-bin"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+
+[lints]
+workspace = true
+</code></pre>
+<p>But according to the Clippy output we just saw, there look to be a number of fields that we can add to provide even better metadata.
+Try changing your config to look more like this:</p>
+<pre><code class="language-toml">[package]
+name = "whimsy-bin"
+version = "0.1.0"
+edition = "2021"
+description = "A whimsical program for learning Rust and Cargo"
+license = "None"
+repository = "http://localhost"
+readme = "README.md"
+keywords = ["whimsy", "learning", "Rust", "Cargo"]
+categories = ["education"]
+
+[dependencies]
+
+[lints]
+workspace = true
+</code></pre>
+<p>Of particular note are:</p>
+<ul>
+<li>the <code>license</code> field, where you could pick things like <code>license = "MIT OR Apache-2.0"</code> if you wanted to. For now, we'll just set it to none.</li>
+<li>the <code>repository</code> field, where you would specify the repo you're using, often a github link</li>
+<li>the <code>readme</code> field is currently pointing to <code>README.md</code>, a file that doesn't exist. That's okay. It doesn't need to be there, but it's probably a good idea to create one anyway.</li>
+<li>the <code>keywords</code> field can contain anything you like, that might be helpful for people searching to find your crate</li>
+<li>the <code>categories</code> field contains a list of <a href="https://crates.io/category_slugs">"slugs"</a> from <code>crates.io</code>, and need to be from that list of sanctioned slugs exactly</li>
+</ul>
+<p>Ok, now that we've got these fields in place, and we have a rough understanding of what they're for, let's try that again.</p>
+<pre><code class="language-bash">cargo clippy
+</code></pre>
+<p>This should now produce a clean lint pass!</p>
+<h2 id="be-the-workspace-danny"><a class="header" href="#be-the-workspace-danny">Be the Workspace, Danny</a></h2>
+<p>There's just one more thing to cover.
+While this is working very nicely, we can see that with the exception of the <code>name</code> and <code>version</code> fields,
+it's likely that all the crates in our workspace might share values for some or all of the other fields.</p>
+<p>Fortunately, we can do just like we have done previously - move these into a section in the workspace <code>Cargo.toml</code>, then tell
+the package <code>Cargo.toml</code> to inherit from the workspace.</p>
+<p>So in your workspace <code>./Cargo.toml</code> we want something like this:</p>
+<pre><code class="language-toml">[workspace.package]
+edition = "2021"
+description = "A whimsical program for learning Rust and Cargo"
+license = "None"
+repository = "http://localhost"
+readme = "README.md"
+keywords = ["whimsy", "learning", "Rust", "Cargo"]
+categories = ["education"]
+</code></pre>
+<p>And hopefully it won't surprise you to see how we can use it. In your package <code>whimsy-bin/Cargo.toml</code>, modify the current section to look like this:</p>
+<pre><code class="language-toml">[package]
+name = "whimsy-bin"
+version = "0.1.0"
+edition.workspace = true
+description.workspace = true
+license.workspace = true
+repository.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
+</code></pre>
+<p>This shouldn't look like magic - we're just telling the package to inherit most of the fields from their definitions in the workspace.</p>
+<h3 id="clippy-master"><a class="header" href="#clippy-master">Clippy Master</a></h3>
+<p>And now, with all this done, Clippy is no longer making us call it master. <em>We</em> are making Clippy call <em>us</em> master.</p>
+<p>When you have internalized this new locus of power, we can move on.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="chapter-2-winit-innit"><a class="header" href="#chapter-2-winit-innit">Chapter 2: Winit, innit?</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="potential-future-additions-and-improvements"><a class="header" href="#potential-future-additions-and-improvements">Potential future additions and improvements</a></h1>
+<ul>
+<li>Add a section describing the difference between beginner, intermediate, and advanced</li>
+<li>I've gone word blind. Fix "outer" and "inner" comments and attributes terminology if it's still backwards?</li>
+<li>Add a section right at the top of Chapter 1 that describes what we're going to build, and possibly introduces a bit of whimsy</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="chapter-0"><a class="header" href="#chapter-0">Chapter 0</a></h1>
+<p>Before we dive in, let's make sure you have the things you need to get started.</p>
+<h2 id="rust"><a class="header" href="#rust">Rust</a></h2>
+<p>First, I assume you have Rust installed.
+I'm targeting the current latest stable release at time of writing (2024-11-11) which is 1.82.0.</p>
+<p>If you don't have Rust installed yet, then this may not be the best book for you, as we're going to be covering intermediate level topics.</p>
+<p>I recommend <a href="https://doc.rust-lang.org/stable/book/">The Book</a> if you like lots of words, <a href="https://github.com/rust-lang/rustlings/">Rustlings</a> if you like lots of programming puzzles, or <a href="https://doc.rust-lang.org/stable/rust-by-example/">Rust by Example</a> if you like more code than words in your explanations.</p>
+<h2 id="your-ide-of-choice"><a class="header" href="#your-ide-of-choice">Your IDE of choice</a></h2>
+<p>I'm going to try hard to be IDE agnostic in this book.
+You go ahead and use whatever you like!</p>
+<p>I do recommend, however, making sure that your IDE is set up to use the <a href="https://rust-analyzer.github.io/">rust-analyzer</a> language server protocol (for things like auto-complete, seeing documentation, etc)
+as well as using <a href="https://doc.rust-lang.org/stable/clippy/installation.html">Clippy</a> instead of the default <code>cargo check</code>. You should be able to find how to do this online pretty easily depending on how popular your IDE is.</p>
+<h2 id="a-basic-understanding-of-rust-programming"><a class="header" href="#a-basic-understanding-of-rust-programming">A basic understanding of Rust programming</a></h2>
+<p>If you have a working understanding of the following things, you're probably all set to proceed:</p>
+<ul>
+<li>How to create, build, test, and run and Rust program
+<ul>
+<li>I'll assume you're familiar with <code>cargo</code>, and how to do all of these using the <code>cargo</code> command line</li>
+</ul>
+</li>
+<li>When to use shared references (like <code>let my_ref = &amp;my_thing;</code>) and when to use exclusive references (like <code>let my_mutable_ref = &amp;mut my_thing;</code>)</li>
+<li>Some understanding of attributes, like using <code>#[derive(Debug)]</code> to add an automatic debug printing formatter to an item</li>
+<li>A general familarity with the Rust lingo - like <code>struct</code> vs <code>enum</code>, <code>mod</code>s, <code>crate</code>s, visibility (think <code>pub</code> or <code>pub(crate)</code>)</li>
+</ul>
+<p>If you've got a handle on these things, you're probably ready to roll!</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>

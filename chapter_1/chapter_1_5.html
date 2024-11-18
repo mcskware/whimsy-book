@@ -1,0 +1,437 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Chapter 1.5: Taming Clippy - A Whimsical Tour of Intermediate Rust Programming</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href=".././mdbook-admonish.css">
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">A Whimsical Tour of Intermediate Rust Programming</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="chapter-15-taming-clippy"><a class="header" href="#chapter-15-taming-clippy">Chapter 1.5: Taming Clippy</a></h1>
+<p>In this chapter, we're going to take a deep dive into <a href="#available-clippy-attributes">lint levels</a>, <a href="#how-to-use-them">lint attributes</a>, and <a href="#when-you-have-a-hammer-everything-looks-like-a-nail">outer lint attributes</a>. If you're well versed in these topics, hop on over to <a href="./chapter_1_6.html">Chapter 1.6</a> to learn more about workspace best practices.</p>
+<h2 id="i-got-99-problems-and-pedantic-mode-is-98-of-them"><a class="header" href="#i-got-99-problems-and-pedantic-mode-is-98-of-them">I got 99 problems, and pedantic mode is 98 of them</a></h2>
+<p>When you start using lints from Clippy's <code>pedantic</code> and <code>restrition</code> lints, you'll invariably get some false positives.
+That is, the lint triggers and a warning is issued, but you're okay with it.
+You're a complex, sensitive, misunderstood soul - but sometimes you just want to tell Clippy to shut up.</p>
+<h2 id="available-clippy-attributes"><a class="header" href="#available-clippy-attributes">Available Clippy attributes</a></h2>
+<p>When you're learning Rust, you probably encountered an <a href="https://doc.rust-lang.org/reference/procedural-macros.html#attribute-macros"><code>attribute</code></a> macro before.</p>
+<p>Yes, that's right, those little things like <code>#[derive(Debug)]</code> or <code>#[test]</code> are really <a href="https://doc.rust-lang.org/reference/procedural-macros.html">procedural macros</a> under the hood.</p>
+<p>We'll get more into macros and how we can <del>abuse</del> use them later in the book, but for now, the important thing to know is that Rust provides several macros to modify <a href="https://doc.rust-lang.org/reference/attributes/diagnostics.html">how it warns you about lints</a>.</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>purpose</th><th>example</th></tr></thead><tbody>
+<tr><td><a href="https://doc.rust-lang.org/rustc/lints/levels.html#allow">allow</a></td><td>prevents warnings or errors from being emitted</td><td><code>#[allow(clippy::float_cmp)]</code> surpresses Clippy telling you about directly comparing <code>f32</code> or <code>f64</code> values using <code>==</code></td></tr>
+<tr><td><a href="https://doc.rust-lang.org/rustc/lints/levels.html#expect">expect</a></td><td>prevents warnings or errors from being emitted, as long as that warning or error actually occurs</td><td><code>#[expect(clippy::float_cmp)]</code> surpresses the warning for float comparisons, or will throw an error if no such comparison was found</td></tr>
+<tr><td><a href="https://doc.rust-lang.org/rustc/lints/levels.html#warn">warn</a></td><td>creates a warning (does not prevent successful compilation) for the lint</td><td><code>#[warn(clippy::float_cmp)]</code> emits a compilation warning when a direct float comparison is encountered</td></tr>
+<tr><td><a href="https://doc.rust-lang.org/rustc/lints/levels.html#force-warn">force-warn</a></td><td>Like <code>warn</code>, but cannot be overridden - either to allow or deny</td><td></td></tr>
+<tr><td><a href="https://doc.rust-lang.org/rustc/lints/levels.html#deny">deny</a></td><td>creates an error (DOES prevent successful compilation) for the lint</td><td><code>#[deny(clippy::float_cmp)]</code> emits a compilation error when a direct float comparison is encountered</td></tr>
+<tr><td><a href="https://doc.rust-lang.org/rustc/lints/levels.html#forbid">forbid</a></td><td>creates an error for the lint, and cannot be surpressed by another Clippy attribute</td><td><code>#[forbid(clippy::float_cmp)]</code> emits a compilation error when a direct float comparison is encountered, even if you tried to slap a <code>#[allow(clippy::float_cmp)]</code> on the offending code (or tried to downgrade or <code>warn</code> or <code>deny</code> even)</td></tr>
+</tbody></table>
+</div>
+<h2 id="how-to-use-them"><a class="header" href="#how-to-use-them">How to use them</a></h2>
+<p>Let's take the example we just saw, with Clippy telling us that the <code>Absent</code> variant was never constructed.
+How do we tell Clippy that we're cool with this?</p>
+<p>By far the simplest way is to drop an <code>allow</code> attribute on the statement or block containing the warning.
+This might look like:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum AlicePresence {
+    Present,
+    #[allow(dead_code)]
+    Absent,
+}
+<span class="boring">}</span></code></pre></pre>
+<p>There are a couple interesting things to note here.
+First, this is not a Clippy lint.
+You can tell by the lack of a <code>clippy::</code> prefix.
+So this is just a normal warning that <code>cargo check</code> would emit as well.
+Neat!</p>
+<p>Second, we placed it directly above the enum variant that was emitting the warning.
+We could have placed the attribute on the enum itself - but that would hide any other unused variants we might add later, without us having the chance to consider what to do about that new warning.</p>
+<p>This is basically using the finest scalpel we have - we are performing minimally invasive surgery.
+We are supressing the lint warning <em>exactly</em> where it is occuring.</p>
+<h2 id="best-practices"><a class="header" href="#best-practices">Best practices</a></h2>
+<p>This does work!
+If you were to run <code>cargo clipy -- -W clippy::pedantic</code>, this specific warning is now gone.
+We still have all the other ones, but at least <em>this</em> one is handled.</p>
+<p>But there's a big issue here.</p>
+<p>Let's say in the future, we start using the <code>Absent</code> variant.
+We go on our merry way, oblivious to the trap we're about to fall into.</p>
+<p>One day, our friend the Caterpillar decides to refactor some of our code.
+And once again, they find themself in the position where the <code>Absent</code> variant is no longer used.</p>
+<p>But no warning gets emitted!
+And the poor Caterpillar never gets the chance to reason about why this happened - a bad refactor, the variant no longer being needed, or whatever.</p>
+<p>This is because the <code>allow</code> attribute had been sitting on the variant this whole time.
+But there is a solution.</p>
+<p>What if we did this instead:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum AlicePresence {
+    Present,
+    #[expect(dead_code)]
+    Absent,
+}
+<span class="boring">}</span></code></pre></pre>
+<p>We have again accomplished our present-term goal: not worrying about the fact that the <code>Absent</code> variant isn't used yet.</p>
+<p>But now, the very next bit of code that introduces a usage of the <code>Absent</code> variant will be presented with a warning!</p>
+<pre><code class="language-bash">warning: this lint expectation is unfulfilled
+  --&gt; whimsy-bin/src/main.rs:35:14
+   |
+35 |     #[expect(dead_code)]
+   |              ^^^^^^^^^
+   |
+   = note: `#[warn(unfulfilled_lint_expectations)]` on by default
+</code></pre>
+<p>As soon as we actually use <code>Absent</code>, Clippy is right there to tell us that we should probably remove this <code>expect</code>, since the variant is now in use.</p>
+<p>So the moral of the story is:</p>
+<div id="admonition-tip" class="admonition admonish-tip" role="note" aria-labelledby="admonition-tip-title">
+<div class="admonition-title">
+<div id="admonition-tip-title">
+<p>Tip</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-tip"></a>
+</div>
+<div>
+<p>When supressing lint warnings, prefer <code>expect</code> over <code>allow</code>.</p>
+</div>
+</div>
+<h2 id="when-you-have-a-hammer-everything-looks-like-a-nail"><a class="header" href="#when-you-have-a-hammer-everything-looks-like-a-nail">When you have a hammer, everything looks like a nail</a></h2>
+<p>But there is another way to do the same job.
+It's less of a minimally invasive surgery, and more of a fascist dictator banning the use of the word "obsequious" nation-wide.</p>
+<p>And that is the <a href="https://doc.rust-lang.org/rust-by-example/attribute.html">outer attribute</a> style of lint suppression.</p>
+<p>In this case, at the start of an item (often an entire file, but sometimes a code block or a mod definition), you write the following:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span>#![expect(dead_code)]
+<span class="boring">fn main() {
+</span><span class="boring">}</span></code></pre></pre>
+<p>If we were to do this at file level, it would come before all our <code>use</code> and <code>mod</code> bits, before <code>main</code>, basically before everything.
+(You can put it after comments, like doc comments for instance, which we'll get to shortly.)</p>
+<p>In this case, the extra <code>!</code> after the <code>#</code> tells rust that instead of applying this attribute to the <em>next</em> thing it sees,
+we want to apply this attribute to <em>whatever item contains this attribute</em>.</p>
+<p>So in this case, we want to apply this particular attribute to the entire <code>main.rs</code> file.</p>
+<p>This is a blunt tool indeed - we won't see <em>any</em> instances of this warning whenever it comes up under <code>main.rs</code>.
+This includes in places we might not expect, like things included via <code>mod</code> statements - so be super careful with this one.
+It often has a tendancy to be too broad.
+Try and find the minimal scope to apply your attribute that finds a balance between:</p>
+<ul>
+<li>Supressing the warnings you are immediately addressing, and</li>
+<li>Not sacrificing readability by having individual item level supressions for the same lint</li>
+</ul>
+<p>I find I rarely need to use outer attributes to suppress warnings, but I do use them a lot to turn warnings on that we may not want being applied globally.
+We'll come across a good use of this when we write our CUDA kernels, since we <em>really</em> don't want those kernels to panic.
+And Rust has a nasty habit of hiding secret panics behind really innocent looking things, like addition or array indexing.</p>
+<p>But that's for later!
+For now, let's try finding a good use case for the outer attribute style of lint suppression.</p>
+<h2 id="moving-wonderland-to-a-mod"><a class="header" href="#moving-wonderland-to-a-mod">Moving Wonderland to a mod</a></h2>
+<p>Let's try moving everything related to Wonderland into its own mod.
+This is pretty simple - we can just wrap everything except <code>main</code> in a <code>mod</code> block:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// Wonderland module
+mod wonderland {
+    #![expect(dead_code)]
+
+    pub enum TeaPartyStatus {
+        TeaIsServed,
+        TeaIsNotServed,
+    }
+
+    pub enum DangerLevel {
+        AsDangerousAsSleepingPuppies,
+        RunForYourLife,
+    }
+
+    pub struct Wonderland {
+        pub tea_party: TeaPartyStatus,
+        pub danger: DangerLevel,
+    }
+
+    pub enum AlicePresence {
+        Present,
+        Absent,
+    }
+
+    pub enum MadHatterSanity {
+        Sane,
+        Insane,
+    }
+
+    pub enum WhiteRabbitPunctuality {
+        OnTime,
+        VeryVeryLate,
+    }
+
+    pub enum JabberwockyPresence {
+        Present,
+        Absent,
+    }
+
+    pub enum QueenOfHeartsMood {
+        Happy,
+        Angry,
+    }
+
+    impl Wonderland {
+        pub fn assess_surroundings(
+            &amp;mut self,
+            alice: AlicePresence,
+            mad_hatter: MadHatterSanity,
+            white_rabbit: WhiteRabbitPunctuality,
+            jabberwocky: JabberwockyPresence,
+            queen_of_hearts: QueenOfHeartsMood,
+        ) {
+            if matches!(alice, AlicePresence::Present)
+                || matches!(mad_hatter, MadHatterSanity::Sane)
+                || matches!(white_rabbit, WhiteRabbitPunctuality::OnTime)
+            {
+                self.tea_party = TeaPartyStatus::TeaIsServed;
+            } else {
+                self.tea_party = TeaPartyStatus::TeaIsNotServed;
+            }
+            if matches!(jabberwocky, JabberwockyPresence::Present)
+                || matches!(queen_of_hearts, QueenOfHeartsMood::Angry)
+            {
+                self.danger = DangerLevel::RunForYourLife;
+            } else {
+                self.danger = DangerLevel::AsDangerousAsSleepingPuppies;
+            }
+        }
+    }
+
+    impl std::fmt::Display for Wonderland {
+        fn fmt(&amp;self, fmt: &amp;mut std::fmt::Formatter&lt;'_&gt;) -&gt; std::fmt::Result {
+            write!(
+                fmt,
+                "Wonderland: Tea Party: {}, Danger: {}",
+                if matches!(self.tea_party, TeaPartyStatus::TeaIsServed) {
+                    "Tea is served"
+                } else {
+                    "Please come again"
+                },
+                if matches!(self.danger, DangerLevel::RunForYourLife) {
+                    "Run for your life"
+                } else {
+                    "No need to worry!"
+                }
+            )
+        }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Pay particular attention to the first line inside the <code>mod</code> definition: that's our outer attribute.</p>
+<p>We now need to update <code>main</code> so it knows how to find things:</p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let mut wonderland = wonderland::Wonderland {
+        tea_party: wonderland::TeaPartyStatus::TeaIsNotServed,
+        danger: wonderland::DangerLevel::AsDangerousAsSleepingPuppies,
+    };
+    wonderland.assess_surroundings(
+        wonderland::AlicePresence::Absent,
+        wonderland::MadHatterSanity::Sane,
+        wonderland::WhiteRabbitPunctuality::VeryVeryLate,
+        wonderland::JabberwockyPresence::Absent,
+        wonderland::QueenOfHeartsMood::Happy,
+    );
+    println!("{wonderland}");
+}</code></pre></pre>
+<p>We can compile the program successfully, and running gives the right output.</p>
+<p>But note that we have surpressed the <code>dead_code</code> warning for the <em>entire</em> <code>Wonderland</code> mod.
+Any future code we add to the module, that would normally trigger this warning, will be silenced.</p>
+<p>But also note that when we do end up using all the variants, the <code>expect</code> attribute would then fire a warning telling us that
+there is no more dead code in the module! We would then simply remove the attribute, and life would be back to normal.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapter_1/chapter_1_4.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapter_1/chapter_1_6.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapter_1/chapter_1_4.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapter_1/chapter_1_6.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,382 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Chapter 1: Best Practices and Project Setup - A Whimsical Tour of Intermediate Rust Programming</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href=".././mdbook-admonish.css">
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">A Whimsical Tour of Intermediate Rust Programming</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="chapter-1-best-practices-and-project-setup"><a class="header" href="#chapter-1-best-practices-and-project-setup">Chapter 1: Best Practices and Project Setup</a></h1>
+<p>Welcome!</p>
+<p>I'm glad you've decided to join me on this whimsical tour of intermediate Rust.
+Hopefully the idea of using procedural generation to create cute little landmasses sounds like fun to you.
+I always find that learning something that isn't supposed to be terribly useful is a great way to slow myself down, be a little more open to taking detours,
+and generally find that fun spark again that drew me to programming in the first place.</p>
+<p>If that sounds like something you've got the time and desire for,then let's go!</p>
+<p>But if we're going to be building a graphical window application to display random whimsical maps, using CUDA programming no less, then we're going to need a good understanding of Rust project setups!</p>
+<p>That's what this chapter is all about.</p>
+<p>We're going to cover the <a href="#whats-a-package-whats-a-workspace">terminology</a> used when speaking about a Rust project, what a typical project <a href="#understanding-whats-inside">contains</a>, and why <a href="#cargo-vs-rust"><code>cargo</code> is so awesome</a>.</p>
+<p>If you're comfortable with these topics, feel free to skip to <a href="./chapter_1_1.html">Chapter 1.1</a> where we'll create a workspace, but do come back for a browse when and if you need to.</p>
+<h2 id="understanding-rust-project-setups"><a class="header" href="#understanding-rust-project-setups">Understanding Rust project setups</a></h2>
+<p>However, in case you're the more curious type...</p>
+<p>You're probably pretty familiar with creating a new Rust package.
+Generally, you either use <code>cargo new MyAmazingApp</code> or <code>cargo init</code>.
+These tools are amazing to get you up and running quickly.</p>
+<p>But there's a problem.</p>
+<h2 id="multiple-packages"><a class="header" href="#multiple-packages">Multiple packages</a></h2>
+<p>What do you do if you want to separate your code into multiple packages, but still access them all with the same <code>cargo</code> commands?
+Or more pressing still, what if you <em>must</em> use separate packages, like when you're targeting multiple different target platforms (as we'll be doing with procedural macros and CUDA code)?</p>
+<p>That's where workspaces come in.</p>
+<details id="admonition-compiling-for-multiple-targets" class="admonition admonish-info" role="note" aria-labelledby="admonition-compiling-for-multiple-targets-title">
+<summary class="admonition-title">
+<div id="admonition-compiling-for-multiple-targets-title">
+<p>Compiling for multiple targets</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-compiling-for-multiple-targets"></a>
+</summary>
+<div>
+<p>When you compile a specific Rust crate, this is generally a single invocation of <code>rustc</code> (often via <code>cargo</code>), with a single set of options.
+This means there's no way to build a crate for two different targets simultaneously.
+If you want to build for different targets, you'll need to perform separate builds.</p>
+</div>
+</details>
+<h2 id="whats-a-package-whats-a-workspace"><a class="header" href="#whats-a-package-whats-a-workspace">What's a package? What's a workspace?</a></h2>
+<p>One key thing to remember is where the line is between Rust and <code>cargo</code>.
+When you're using <code>cargo</code> to create, build, test, and run your program, this distinction barely matters.
+But when you need to break things up, it's important to know how all this works.</p>
+<h3 id="getting-our-terminology-right"><a class="header" href="#getting-our-terminology-right">Getting our terminology right</a></h3>
+<p>Since things can get a bit tricky, I'll be using the following terms in the following ways.</p>
+<div class="table-wrapper"><table><thead><tr><th>Term</th><th>Definition</th><th>Example</th></tr></thead><tbody>
+<tr><td>module</td><td>A Rust "module", i.e. code inside of a <code>mod</code> block</td><td>A <code>Player</code> module in a video game, containing the data and logic describing a Player</td></tr>
+<tr><td>crate</td><td>What gets built when you tell <code>rustc</code> to compile a given <code>.rs</code> file. This includes all modules used by this <code>.rs</code> file. This builds either a library or an executable binary</td><td>A game model library, containing the <code>Player</code>, <code>Crop</code>, and <code>Harvest</code> modules</td></tr>
+<tr><td>package</td><td>The collection of all the relevant libraries and binaries. Also includes all the metadata included in <code>Cargo.toml</code>, as well as all dependency information</td><td>The game model library crate holding the game logic, compiled for a specific version of each dependency, with a specific version for users to track important changes in the package's development</td></tr>
+<tr><td>workspace</td><td>A collection of packages that need to be built in coordination, to ensure dependencies are kept in sync, API versions are used correctly, and metadata which should be shared can be described easily</td><td>Your game logic package, your game executable package, all the shared dependencies between them, and the necessary information on how to build the final product correctly</td></tr>
+<tr><td>project</td><td>The final thing you're trying to create. This might include multiple <code>cargo</code> packages, code in other languages, assets like icons or configuration files, and so on</td><td>Your complete game, including the website, public download storage, marketing materials, etc</td></tr>
+</tbody></table>
+</div>
+<p>There isn't a super-duper official definition for these terms (but they are kind of <a href="https://doc.rust-lang.org/book/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">discussed in The Book</a>).
+However, they seem to be used in these ways by the majority of the community, at least as far as I can tell.
+So if you use them this way, people will likely understand what you're talking about.</p>
+<p>In our case, I just want to be very clear what I'm referring to in this book.</p>
+<h3 id="a-cargo-package"><a class="header" href="#a-cargo-package">A cargo package</a></h3>
+<p>A <code>cargo</code> package is a happy little thing.
+Its favorite book is a <code>Cargo.toml</code> file, and its favorite food is a <code>src</code> directory.
+Neither of these are required by Rust, but the community has definitely settled on <code>cargo</code> as the sanctioned build tool.</p>
+<p>Let's start with the basics.
+We'll create a new package, called "whimsy".
+You can really pick any package name you like, but that's what I'll be using in this book.</p>
+<p>Open up your favorite command terminal, move to the directory where you want to create a new package folder, and (as usual) enter:</p>
+<pre><code class="language-bash">cargo new whimsy
+</code></pre>
+<h3 id="binary-vs-library"><a class="header" href="#binary-vs-library">Binary vs library</a></h3>
+<p>First, take a moment and check out what the output of the <code>cargo</code> command said:</p>
+<pre><code class="language-bash">Creating binary (application) `whimsy` package
+note: see more `Cargo.toml` keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+</code></pre>
+<p>The important thing here is that you've created a <em>binary</em> package.
+This means that Rust will build an executable program that you can run.</p>
+<p>But the other option is to create a library package: this just creates a 'library' binary, which can't be run on its own, but other programs can use the functionality inside that library.
+Your probably very familiar with this kind of package, even if you didn't know it.
+When you add a new dependency to your package, via <code>cargo add rand</code> for instance, or adding it to the <code>[dependencies]</code> section of your Cargo.toml, you're actually adding a library!</p>
+<div id="admonition-creating-library-packages-with-cargo" class="admonition admonish-note" role="note" aria-labelledby="admonition-creating-library-packages-with-cargo-title">
+<div class="admonition-title">
+<div id="admonition-creating-library-packages-with-cargo-title">
+<p>Creating library packages with cargo</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-creating-library-packages-with-cargo"></a>
+</div>
+<div>
+<p>If you haven't created a library before, you would just add <code>--lib</code> to the command line, like this: <code>cargo new --lib whimsylib</code>.
+We don't want that just now, as we're happy with a binary package.
+But I wanted to point it out so you know how you can do this in the future.</p>
+</div>
+</div>
+<h4 id="why-not-both"><a class="header" href="#why-not-both">Why not both?</a></h4>
+<p>In Rust, it's even possible to have a package create both a library and a binary!
+This is often useful if you want to provide both a default command line tool or other application that uses your library,
+as well as provide the ability for others to use the library functionality in their own programs.</p>
+<p>(The general idea is to have both a <code>main.rs</code> and a <code>lib.rs</code> file in your <code>src</code> root tree, but there are <a href="https://doc.rust-lang.org/cargo/reference/cargo-targets.html#library">other ways</a> to do it as well.)</p>
+<h2 id="understanding-whats-inside"><a class="header" href="#understanding-whats-inside">Understanding what's inside</a></h2>
+<p>What happens when you ask <code>cargo</code> for a new package?
+Well, we can go through each file step by step and see what we've got.</p>
+<p>There are only a few files and directories created by default.</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>.git</code></td><td>Directory</td><td>Contains information for Git source control</td></tr>
+<tr><td><code>.gitignore</code></td><td>File</td><td>Used to exclude items from being tracked by source control</td></tr>
+<tr><td><code>Cargo.toml</code></td><td>File</td><td>Configuration file for the <code>cargo</code> package</td></tr>
+<tr><td><code>src</code></td><td>Directory</td><td>Convenient place so all source code is in one location</td></tr>
+<tr><td><code>src/main.rs</code></td><td>File</td><td>Rust source code, and the default crate root source file</td></tr>
+</tbody></table>
+</div>
+<h3 id="git-stuff"><a class="header" href="#git-stuff">Git stuff</a></h3>
+<p>Right away, we see a directory named <code>.git</code> and a file <code>.gitignore</code>.
+If you use Git, you'll be very familiar with these.
+If not, these files are used for the Git source control system, which I highly recommend you use.</p>
+<details id="admonition-get-git-youre-gonna-need-it" class="admonition admonish-warning" role="note" aria-labelledby="admonition-get-git-youre-gonna-need-it-title">
+<summary class="admonition-title">
+<div id="admonition-get-git-youre-gonna-need-it-title">
+<p>Get Git (You're gonna need it)</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-get-git-youre-gonna-need-it"></a>
+</summary>
+<div>
+<p>Using source control is an absolute must if you're going to be building anything beyond the simplest of projects.
+It effectively gives you the ability to time travel!
+(But only backward in time.)</p>
+<p>If you aren't yet, I do recommend that you use version control regularly.
+If you're not really up to speed on the topic, there are lots of <a href="https://docs.github.com/en/get-started/getting-started-with-git">great tutorials</a> online.</p>
+<p>You don't have to use Git, but it <em>is</em> what comes by default with a new cargo project.
+I'll assume in this book you've made the plunge, gotten Git installed, and learned a little about how to use it.</p>
+</div>
+</details>
+<p>Take a look and see what's inside the <a href="https://git-scm.com/docs/gitignore"><code>.gitignore</code></a> file - it's just a single entry:</p>
+<pre><code>/target
+</code></pre>
+<p>In Git-speak, this means that we should ignore everything under the <code>target</code> directory for source control purposes.
+The normal jargon for this is that items listed in the <code>.gitignore</code> file are "untracked", so you might hear it said that way as well.</p>
+<p>This makes sense, of course, since that's where <code>cargo</code> puts all your intermediate and final build outputs by default.
+These files change a lot, and can always be recreated from the source code, so we're happy to keep it like that for now.</p>
+<h3 id="source-code"><a class="header" href="#source-code">Source code</a></h3>
+<p>By default, <code>cargo</code> uses the <code>src</code> directory to hold all your base package source files (aka, your <code>.rs</code> files).
+You <em>can</em> put your source wherever you like, but this is the overwhelmingly standard setup in the Rust community.</p>
+<p>Because we asked for a binary package, <code>cargo</code> has created <code>src/main.rs</code> for us, with a simple "Hello world" style example main function.</p>
+<p>The name <code>main.rs</code> is simply a convention however.
+If you really wanted to, you could treat any file you like as the main entry point for your package.
+You can see the docs for the <a href="https://doc.rust-lang.org/cargo/reference/cargo-targets.html#binaries">[[bin]]</a> section of the <code>cargo</code> docs for more info.</p>
+<h3 id="cargo-configuration"><a class="header" href="#cargo-configuration">Cargo configuration</a></h3>
+<p>The final file created by <code>cargo</code> is <code>Cargo.toml</code>.
+This is the main configuration file that controls how <code>cargo</code> will build your package.</p>
+<p>There are a lot of options here, but for now, we're going to leave it as is.
+(We're going to be completely overhauling this file anyway when we create a workspace.)</p>
+<h2 id="cargo-vs-rust"><a class="header" href="#cargo-vs-rust">Cargo vs Rust</a></h2>
+<p>So if we look at the files that we generated from <code>cargo new</code>, we see that only <em>one</em> file is actually needed by Rust - namely the <code>main.rs</code> source file.
+All the rest of the files are either Git plumbing or <code>cargo</code> business.</p>
+<p>If you really wanted to, you could build this simple crate without even invoking <code>cargo</code>.
+Try entering the following from your package root:</p>
+<pre><code class="language-bash">rustc src/main.rs
+</code></pre>
+<p>You should get a runnable executable file in the same directory, called <code>main</code>.
+(Without extra options on the command line, <code>rustc</code> just picks the same name as the source file.)</p>
+<p>Try running the program:</p>
+<pre><code class="language-bash">./main
+</code></pre>
+<p>You should get the standard "Hello, world!" output.</p>
+<p>(You are free to delete this binary now, we won't need it again. The simplest way is just running <code>rm main</code>.)</p>
+<p>And with that we just built a Rust application without invoking <code>cargo</code> at all!</p>
+<p>But honestly, there are a ton of benefits to using <code>cargo</code>. Here's just a short, very incomplete, list:</p>
+<ul>
+<li><code>cargo</code> manages all the command line flags for rustc for you</li>
+<li><code>cargo</code> defines a couple default build configurations, called <code>dev</code> and <code>release</code>, which do what you probably think they do</li>
+<li><code>cargo</code> allows you to manage your build using a pretty user-friendly <a href="https://toml.io/en/">.toml</a> configuration file
+<ul>
+<li>there's lots of good support for .toml file editing in most IDEs</li>
+</ul>
+</li>
+<li><code>cargo</code> keeps all of your build outputs in the <code>target</code> directory by default, with easy ways to <code>clean</code> up your package folder</li>
+<li><code>cargo</code> manages the code for all your dependencies, building them, downloading them, upgrading them, etc</li>
+</ul>
+<p>These are all things you'd have to do manually without a good build system like <code>cargo</code>.
+But still, it's important to know what's on the Rust side of things as opposed to the <code>cargo</code> side.</p>
+<h2 id="moving-to-a-workspace"><a class="header" href="#moving-to-a-workspace">Moving to a workspace</a></h2>
+<p>While this setup is great for simple projects, we know we're going to need a bit more flexibility.
+Fortunately, <code>cargo</code> even has great support for this via the workspace functionality.</p>
+<p>When you're comfortable with the info covered here, hop over to the next section to start playing with workspaces!</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../introduction.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapter_1/chapter_1_1.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../introduction.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapter_1/chapter_1_1.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Chapter 1.2: Managing dependencies - A Whimsical Tour of Intermediate Rust Programming</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href=".././mdbook-admonish.css">
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">A Whimsical Tour of Intermediate Rust Programming</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="chapter-12-managing-dependencies"><a class="header" href="#chapter-12-managing-dependencies">Chapter 1.2: Managing dependencies</a></h1>
+<p>So far, we have basically the bestest most killer app of all time.
+It says hello to the world, and exits.
+It really doesn't get better than that.</p>
+<p>Unless...</p>
+<p>What if we were to reply back with a random number as well?</p>
+<p>In this chapter, we'll add a dependency <a href="#whats-the-solution">the workspace way</a>, understand <a href="#best-practices">semantic versioning</a> as it's used in Rust, and get a bit of insight into <a href="#cargolock">the <code>Cargo.lock</code> file</a>.</p>
+<p>If you're comfortable with these topics, then head over to <a href="./chapter_1_3.html">Chapter 1.3</a>, where we'll meet everyone's favorite helper, Clippy!</p>
+<h2 id="adding-dependencies-its-weird"><a class="header" href="#adding-dependencies-its-weird">Adding dependencies (it's weird)</a></h2>
+<p>Ok, we want to spit out a random number along with our hello world message.
+No big deal.
+Right?</p>
+<p>Let's see what happens if we follow the usual pattern.
+Back in the terminal, let's add a dependency on the <code>rand</code> crate.
+Run the following from your workspace root:</p>
+<pre><code class="language-bash">cargo add rand
+</code></pre>
+<p>Now, let's modify our <code>main.rs</code> to use this.
+Maybe now we want something like this:</p>
+<pre><pre class="playground"><code class="language-rust">use rand::Rng;
+
+fn main() {
+    let random_value = rand::thread_rng().gen_range(1..101);
+    println!("Hello, world! Your random number is: {random_value}");
+}</code></pre></pre>
+<p>If we build and run this (say, via <code>cargo run</code>), we get just what we expect!</p>
+<pre><code class="language-bash">Hello, world! Your random number is: 96
+</code></pre>
+<p>YMMV on the exact output, of course.</p>
+<p>Looks great, but there's something interesting going on.</p>
+<h2 id="wheres-my-dependency-at"><a class="header" href="#wheres-my-dependency-at">Where's my dependency at?</a></h2>
+<p>If you look at your <code>whimsy-bin/Cargo.toml</code>, you'll see that we've now added the dependency, just like we'd expect:</p>
+<pre><code class="language-toml">[dependencies]
+rand = "0.8.5"
+</code></pre>
+<p>So what's the problem?</p>
+<p>Well, let's say we have a library package as well as a binary package.
+And let's say they both use the <code>rand</code> crate.
+There's a danger that the dependencies could get out of sync between each other.</p>
+<p>While that's not a problem in itself, it <em>is</em> a problem if the two <code>rand</code> versions are incompatible.
+As it turns out, while building a binary, Rust will only ever build <em>one</em> version of a given crate.</p>
+<p>If you think about it, this makes sense.
+If Rust were to build version <code>rand</code> version <code>0.6.3</code> for the library, and then version <code>0.8.5</code> for the binary, how would we link everything together?</p>
+<p>(If you're not familiar with the linking process, then just trust me - this gets hairy real fast.)</p>
+<p>So Rust will choose one version of a library to build, then use that version for every library and binary that depend on it.</p>
+<h3 id="whats-the-solution"><a class="header" href="#whats-the-solution">What's the solution?</a></h3>
+<p>The solution to this potential for mismatch is, of course, to use the workspace!</p>
+<p>As it turns out, there's a dependencies section in the workspace as well.
+We want to move our <code>rand</code> dependency there, and then tell the <code>whimsy-bin</code> project to use the version referenced by the workspace.</p>
+<p>Easy enough!
+In your workspace's Cargo.toml, add the following:</p>
+<pre><code class="language-toml">[workspace.dependencies]
+rand = "0.8.5"
+</code></pre>
+<p>And now in <code>whimsy-bin/Cargo.toml</code>, modify the dependencies section to look like this:</p>
+<pre><code class="language-toml">[dependencies]
+rand.workspace = true
+</code></pre>
+<p>What we're doing here is telling the <code>whimsy-bin</code> project to use whatever version of <code>rand</code> that's specified in the workspace.</p>
+<p>Now, if we were to add the <code>rand</code> dependency to another library in our workspace, we'd just add that same <code>rand.workspace = true</code> line to the library's <code>Cargo.toml</code>.</p>
+<p>This is how we ensure all the different packages in our workspace are compatible, or at least as far as dependencies are concerned.</p>
+<h2 id="best-practices"><a class="header" href="#best-practices">Best practices</a></h2>
+<p>This is all well and good, but there's one more thing we should take a look at.
+Currently, we're specifying version <code>0.8.5</code> of the <code>rand</code> crate.</p>
+<p>What does this actually mean?</p>
+<p>Well, cargo <a href="https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html">dependency version specifications</a> are more complicated than you'd think.
+Just saying we want version <code>0.8.5</code> does not guarantee that we'll get exactly that version.</p>
+<h3 id="oh-no-its-semver-isnt-it"><a class="header" href="#oh-no-its-semver-isnt-it">Oh no it's semver isn't it</a></h3>
+<p>Yes.
+Yes it is semver.</p>
+<p>If you haven't run into how Rust uses <a href="https://doc.rust-lang.org/cargo/reference/semver.html">semantic versioning</a>, you probably didn't even realize that it could be so strange.</p>
+<p>Long story short, specifying your version as the exact string <code>0.8.5</code> really means: Rust is able to use any version of this library that has version <code>0.8.X</code>, where <code>X</code> is any value 5 or greater.</p>
+<h4 id="what-do-the-three-numbers-mean-again"><a class="header" href="#what-do-the-three-numbers-mean-again">What do the three numbers mean again?</a></h4>
+<p>If you have version <code>X.Y.Z</code> of a library, then you have:</p>
+<ul>
+<li>Major version <code>X</code></li>
+<li>Minor version <code>Y</code></li>
+<li>Patch version <code>Z</code></li>
+</ul>
+<p>Except when the major version is exactly <code>0</code>, then <code>Y</code> is treated as the major version, and <code>Z</code> as the minor version, with no patch version specification.</p>
+<p>(Yes this is a weird and stupid exception, but there actually are good historical reasons for this being the case in the Rust community.
+Mostly it boils down to people not wanting to commit to "true" major version <code>1</code> while they're still hammering out the code, so we needed some way to tell
+<code>cargo</code> that it was okay to bump the <code>Z</code> value like a minor version if <code>X</code> was zero. Life is grand sometimes.)</p>
+<h3 id="so-why-are-we-discussing-this-again"><a class="header" href="#so-why-are-we-discussing-this-again">So why are we discussing this again?</a></h3>
+<p>Remember that we're trying to keep our dependencies as compatible as possible - not just in our own workspace packages, but also against those dependencies we pull in as helper libraries.</p>
+<p>Now, there are all sorts of ways to "pin" a library to a specific version, to specify specific version ranges, to allow variation in either the major,
+minor, or patch version numbers.
+But we aren't so concerned about all that, we just want to make sure that Rust doesn't use a completely incompatible version.</p>
+<p>As it turns out, you can do this by just chopping off the bits you don't care about.
+So if we have version <code>0.8.5</code>, the rules of semver tell us that the crate author should not be committing any "breaking changes" if the next crate version
+still starts with <code>0.8</code>. (Defining "breaking changes" is a super complex topic on its own, but not worth diving into here.)</p>
+<p>For us, it means that we can relax our requirements a bit in our workspace.
+This is a good thing!</p>
+<p>Imagine that we release a library into the world.
+And let's say that we only specify version <code>0.8</code>.
+Then anyone using that library could relying on version <code>0.8.2</code> specifically if they really wanted, and our library would still be compatible.
+If we still had <code>0.8.5</code>, that other person wouldn't be able to use our library, because their version wouldn't match ours.
+Oh woe be to those who have legacy codebases and requirements!</p>
+<h3 id="so-lets-fix-it"><a class="header" href="#so-lets-fix-it">So let's fix it</a></h3>
+<p>Let's change how we require the <code>rand</code> crate in our workspace.
+Jump into <code>./Cargo.toml</code> and update the rand dependency line to the following:</p>
+<pre><code class="language-toml">rand = "0.8"
+</code></pre>
+<p>Note that because we're changing it in the workspace, and because all our child projects refer to the version in the workspace, all our projects are updated for free!</p>
+<h3 id="theres-always-a-catch"><a class="header" href="#theres-always-a-catch">There's always a catch</a></h3>
+<p>But not so fast!
+What <em>actually</em> happened when we made that change?</p>
+<p>This is the realm of <code>Cargo.lock</code>, a mysterious, little-understood denizen of the dark forest we call Cargo-internals.</p>
+<h2 id="cargolock"><a class="header" href="#cargolock">Cargo.lock</a></h2>
+<p>You've probably noticed this file from time to time.
+You've probably also been told not to edit it.
+In fact, it even comes with a warning sign to any small children who think they see candy inside:</p>
+<pre><code class="language-toml"># This file is automatically @generated by Cargo.
+# It is not intended for manual editing.
+version = 3
+</code></pre>
+<p>Those are the first few lines of the Cargo.lock file for our project.</p>
+<div id="admonition-quote" class="admonition admonish-quote" role="note" aria-labelledby="admonition-quote-title">
+<div class="admonition-title">
+<div id="admonition-quote-title">
+<p>Quote</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-quote"></a>
+</div>
+<div>
+<p>not intended for manual editing</p>
+<p>- <em>Cargo.lock, 2024, laughing probably</em></p>
+</div>
+</div>
+<p>Let's explore this file a little bit to see if we can better understand what it's doing.</p>
+<h3 id="dependency-entries"><a class="header" href="#dependency-entries">Dependency entries</a></h3>
+<p>If we take a look at Cargo.lock in an editor, we see a bunch of entries, for lots of dependencies.
+In our case, the first such dependency looks like this:</p>
+<pre><code class="language-toml">[[package]]
+name = "byteorder"
+version = "1.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b"
+</code></pre>
+<p>What the heck?
+We never asked for a <code>byteorder</code> dependency.
+What's going on?</p>
+<p>Well, whenever you aren't sure why something is showing up in your project, you can use a handy tool called <code>cargo tree</code> to sort it out.
+Let's try it.</p>
+<p>From your terminal, type:</p>
+<pre><code class="language-bash">cargo tree
+</code></pre>
+<p>You should see some super fancy ASCII graphics, and also some boring dependency chains.
+Probably something like this:</p>
+<pre><code class="language-bash">whimsy-bin v0.1.0 (/home/code/whimsy/whimsy-bin)
+└── rand v0.8.5
+    ├── libc v0.2.162
+    ├── rand_chacha v0.3.1
+    │   ├── ppv-lite86 v0.2.20
+    │   │   └── zerocopy v0.7.35
+    │   │       ├── byteorder v1.5.0
+    │   │       └── zerocopy-derive v0.7.35 (proc-macro)
+    │   │           ├── proc-macro2 v1.0.89
+    │   │           │   └── unicode-ident v1.0.13
+    │   │           ├── quote v1.0.37
+    │   │           │   └── proc-macro2 v1.0.89 (*)
+    │   │           └── syn v2.0.87
+    │   │               ├── proc-macro2 v1.0.89 (*)
+    │   │               ├── quote v1.0.37 (*)
+    │   │               └── unicode-ident v1.0.13
+    │   └── rand_core v0.6.4
+    │       └── getrandom v0.2.15
+    │           ├── cfg-if v1.0.0
+    │           └── libc v0.2.162
+    └── rand_core v0.6.4 (*)
+</code></pre>
+<p>After a quick inspection, we can see that <code>byteorder</code> is being brought into our project because <code>zerocopy</code> uses it, and <code>ppv-lite86</code> uses <code>zerocopy</code>, <code>rand_chacha</code> uses <code>ppv-lite86</code>, and finally the <code>rand</code> crate uses <code>rand_chacha</code>.</p>
+<p>So it makes sense why <code>byteorder</code> is in our dependencies, just a bit hidden.
+(This is one of the things I love about <code>cargo</code>: it manages all of this for us.)</p>
+<h3 id="okay-so-what-about-the-cargolock-entry"><a class="header" href="#okay-so-what-about-the-cargolock-entry">Okay, so what about the <code>Cargo.lock</code> entry?</a></h3>
+<p>Let's take another look at that entry in <code>Cargo.lock</code>, now that we understand why <code>byteorder</code> is there at all.
+It looks like this:</p>
+<pre><code class="language-toml">[[package]]
+name = "byteorder"
+version = "1.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b"
+</code></pre>
+<p>We can guess what the checksum is there for (security stuff mumble mumble).
+We can even see where it pulled the crate data from, in the <code>source</code> line.</p>
+<p>We also see a version.
+And it's a fully specified semver version too.</p>
+<p><em>This</em> is what <code>Cargo.lock</code> is for.</p>
+<p>Remember how we changed our <code>rand</code> version dependency to <code>0.8</code> instead of <code>0.8.5</code>?
+Well, if we hunt down the section in <code>Cargo.lock</code> that references <code>rand</code>, we see:</p>
+<pre><code class="language-toml">[[package]]
+name = "rand"
+version = "0.8.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "34af8d1a0e25924bc5b7c43c079c942339d8f0a8b57c39049bef581b46327404"
+dependencies = [
+ "libc",
+ "rand_chacha",
+ "rand_core",
+]
+</code></pre>
+<p>First, we pat ourselves on the back because we already knew that <code>rand_chacha</code> was a required dependency, because we went full nerd with <code>cargo tree</code>.</p>
+<p>But then, we see that the version says <code>0.8.5</code>. Not <code>0.8</code>, but the full <code>0.8.5</code>.</p>
+<h3 id="but-hang-on-we-didnt-change-anything-since-we-edited-the-version-number"><a class="header" href="#but-hang-on-we-didnt-change-anything-since-we-edited-the-version-number">But hang on, we didn't change anything since we edited the version number!</a></h3>
+<p>Just to make sure this is real, let's try an experiment.</p>
+<p>As it happens, <code>Cargo.toml</code> isn't <em>needed</em> when you do a build.
+It can be regenerated at any time when you need it.</p>
+<p>So let's Lazarus this thing.
+In your terminal:</p>
+<pre><code class="language-bash">rm Cargo.lock
+</code></pre>
+<p>Now do anything that needs the dependencies to be fully fleshed out.
+You can run <code>cargo check</code>, <code>cargo build</code> or something like that.</p>
+<p>Now take a look at the <code>rand</code> entry in your regenerated <code>Cargo.lock</code>.
+It should still reference <code>0.8.5</code>.</p>
+<p>So what <code>Cargo.lock</code> is doing is now a bit more clear:</p>
+<ul>
+<li>It "reifies" our dependency version numbers from our version requests in <code>Cargo.toml</code>
+<ul>
+<li>This is a fancy word meaning it takes the fluffy semver specification we have in our <code>Cargo.toml</code> and picks a real version of the library in question</li>
+</ul>
+</li>
+<li>It keeps track of what version we have already downloaded so we don't have to redownload every build</li>
+<li>(Some other magic, but it's not too important at this point)</li>
+</ul>
+<p>There's a little more to the story, like being able to make fully reproducible builds (because you have such detailed info to compare against), and some other things.
+But hopefully now you'll understand better why <code>Cargo.lock</code> is there and what it's used for.</p>
+<h2 id="tidying-up"><a class="header" href="#tidying-up">Tidying up</a></h2>
+<p>We covered an awful lot about dependencies here, probably more than you wanted to know.
+But when you feel like you have a good handle on things, let's move onto something that can actually make your life a bit better.</p>
+<p>Clippy!</p>
+<div id="admonition-i-see-that-youre-trying-to-avoid-doing-real-work-would-you-like-to-continue" class="admonition admonish-note" role="note" aria-labelledby="admonition-i-see-that-youre-trying-to-avoid-doing-real-work-would-you-like-to-continue-title">
+<div class="admonition-title">
+<div id="admonition-i-see-that-youre-trying-to-avoid-doing-real-work-would-you-like-to-continue-title">
+<p>I see that you're trying to avoid doing real work. Would you like to continue?</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-i-see-that-youre-trying-to-avoid-doing-real-work-would-you-like-to-continue"></a>
+</div>
+<div>
+<ul>
+<li><a href="./chapter_1/chapter_1_3.html">Yes</a></li>
+<li><a href="https://old.reddit.com/r/rust">No</a></li>
+<li>I wish I had real work</li>
+</ul>
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapter_1/chapter_1_1.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapter_1/chapter_1_3.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapter_1/chapter_1_1.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapter_1/chapter_1_3.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
